@@ -1,0 +1,71 @@
+{
+  "batch_id": "batch_a_sd15",
+  "failed": 6,
+  "items": [
+    {
+      "codes": [
+        "EMPTY_FILE"
+      ],
+      "details": {
+        "bytes": 509,
+        "path": "runs/batch_a_sd15/images/a1_studio_portrait__sd15__s1001.png"
+      },
+      "job_id": "a1_studio_portrait__sd15__s1001",
+      "ok": false
+    },
+    {
+      "codes": [
+        "MISSING_FILE"
+      ],
+      "details": {
+        "reason": "no execution record"
+      },
+      "job_id": "a2_studio_portrait__sd15__s1002",
+      "ok": false
+    },
+    {
+      "codes": [
+        "MISSING_FILE"
+      ],
+      "details": {
+        "reason": "no execution record"
+      },
+      "job_id": "a3_studio_portrait__sd15__s1003",
+      "ok": false
+    },
+    {
+      "codes": [
+        "MISSING_FILE"
+      ],
+      "details": {
+        "reason": "no execution record"
+      },
+      "job_id": "a4_studio_portrait__sd15__s1004",
+      "ok": false
+    },
+    {
+      "codes": [
+        "MISSING_FILE"
+      ],
+      "details": {
+        "reason": "no execution record"
+      },
+      "job_id": "a5_studio_portrait__sd15__s1005",
+      "ok": false
+    },
+    {
+      "codes": [
+        "MISSING_FILE"
+      ],
+      "details": {
+        "reason": "no execution record"
+      },
+      "job_id": "a6_studio_portrait__sd15__s1006",
+      "ok": false
+    }
+  ],
+  "passed": 0,
+  "success_rate": 0.0,
+  "total_jobs": 6,
+  "validated_at": "2026-09-11T10:52:06.358390+00:00"
+}

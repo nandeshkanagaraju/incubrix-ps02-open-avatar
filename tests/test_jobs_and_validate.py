@@ -171,6 +171,29 @@ def test_validate_detects_blank_image(rendered, cfg):
     assert "BLANK_IMAGE" in item.codes
 
 
+def test_tiny_blank_image_reports_both_codes(rendered, cfg):
+    """Regression: an all-black frame (NaN pipeline output) compresses below the
+    byte floor. EMPTY_FILE alone hides the real defect, so both codes must fire."""
+    from PIL import Image
+
+    from openavatar.backends import sha256_file
+
+    bundle = Bundle.load(rendered)
+    job = bundle.jobs[0]
+    p = rendered / "images" / job.output_name
+    Image.new("RGB", (job.width, job.height), (0, 0, 0)).save(p)
+    assert p.stat().st_size < 1024, "fixture assumption: a black PNG is tiny"
+    results = json.loads((rendered / "results.json").read_text())
+    for r in results["results"]:
+        if r["job_id"] == job.job_id:
+            r["sha256"] = sha256_file(p)
+    (rendered / "results.json").write_text(json.dumps(results))
+    report = validate_bundle(rendered, cfg)
+    item = next(i for i in report.items if i.job_id == job.job_id)
+    assert "EMPTY_FILE" in item.codes
+    assert "BLANK_IMAGE" in item.codes
+
+
 def test_validate_detects_hash_mismatch(rendered, cfg):
     bundle = Bundle.load(rendered)
     results = json.loads((rendered / "results.json").read_text())

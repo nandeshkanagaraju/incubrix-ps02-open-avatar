@@ -79,11 +79,16 @@ class LocalDiffusersBackend:
 
     def __init__(self, device: str = "auto", dtype: str = "auto"):
         self.device = pick_device(device)
-        # float16 halves UNet residency (~3.4 GB -> ~1.7 GB), which is what makes
-        # this fit on an 8 GB M1 alongside the text encoder and activations.
-        # CPU float16 matmuls are not accelerated on this hardware, so CPU stays
-        # float32. The effective dtype is recorded on every JobResult.
-        self.dtype = ("float16" if self.device == "mps" else "float32") if dtype == "auto" else dtype
+        # float32 everywhere by default. float16 is the obvious memory win on
+        # MPS (UNet 3.4 GB -> 1.7 GB) but SD 1.5's VAE decoder overflows in fp16
+        # and silently emits NaN, which reaches disk as an all-black PNG - see
+        # evidence/failures/fp16_mps_nan_black_output.png. Upcasting only the VAE
+        # then fails because the UNet hands it fp16 latents, so the choice is
+        # all-fp16 (silently wrong) or all-fp32 (correct). Correct wins; the
+        # memory is recovered with attention and VAE slicing below.
+        # `--dtype float16` remains available for anyone who wants to reproduce
+        # the failure. The effective dtype is recorded on every JobResult.
+        self.dtype = "float32" if dtype == "auto" else dtype
         self._cache: dict[tuple, object] = {}
 
     # -- pipeline construction -------------------------------------------

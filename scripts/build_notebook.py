@@ -55,20 +55,27 @@ open("requirements_notebook.txt","w").write(
 '''
 
 CELL_LOAD = '''\
-# ---- load the locally-prepared bundle -------------------------------------
+# ---- load every locally-prepared bundle -----------------------------------
 from pathlib import Path
-import json
+import json, glob
 
-BUNDLE_JSON = "/kaggle/working/bundle.json"   # <-- edit if you uploaded a dataset
+# Upload bundles.zip (produced by scripts/export_all.sh) and unzip it here.
+BUNDLE_DIR = "/kaggle/working/bundles"
 
-bundle = json.loads(Path(BUNDLE_JSON).read_text())
-assert bundle["schema_version"] == 2, f"unexpected schema_version {bundle['schema_version']}"
-jobs = bundle["jobs"]
-print(f"batch_id   : {bundle['batch_id']}")
-print(f"jobs       : {len(jobs)}")
-print(f"held specs : {len(bundle.get('held', []))}  (refused/ambiguous - not executed here)")
-for j in jobs[:3]:
-    print(f"  {j['job_id']}  {j['repo_id']}@{j['revision'][:12]}  {j['width']}x{j['height']} seed={j['seed']}")
+paths = sorted(glob.glob(f"{BUNDLE_DIR}/*.json"))
+assert paths, f"no bundle json found in {BUNDLE_DIR} - did you unzip bundles.zip?"
+
+bundles = []
+for p in paths:
+    b = json.loads(Path(p).read_text())
+    assert b["schema_version"] == 2, f"{p}: unexpected schema_version {b['schema_version']}"
+    bundles.append(b)
+
+total = sum(len(b["jobs"]) for b in bundles)
+print(f"{len(bundles)} bundle(s), {total} job(s) total\\n")
+for b in bundles:
+    models = sorted({f"{j['repo_id'].split('/')[-1]}@{j['revision'][:8]}" for j in b["jobs"]})
+    print(f"  {b['batch_id']:20s} {len(b['jobs']):2d} jobs  held={len(b.get('held', []))}  {models}")
 '''
 
 CELL_PIPE = '''\
@@ -103,11 +110,13 @@ def get_pipe(job):
 '''
 
 CELL_RUN = '''\
-# ---- execute every job ----------------------------------------------------
+# ---- execute every job of every bundle ------------------------------------
+# Jobs are grouped by checkpoint so each set of weights is loaded exactly once,
+# even when the same model is shared across bundles.
 import hashlib, time, json
 from pathlib import Path
 
-OUT = Path("/kaggle/working/out"); (OUT/"images").mkdir(parents=True, exist_ok=True)
+OUT = Path("/kaggle/working/out")
 
 def sha256_file(p):
     h = hashlib.sha256()
@@ -115,8 +124,13 @@ def sha256_file(p):
         for c in iter(lambda: fh.read(1<<20), b""): h.update(c)
     return h.hexdigest()
 
-results = []
-for i, job in enumerate(jobs, 1):
+work = [(b["batch_id"], j) for b in bundles for j in b["jobs"]]
+work.sort(key=lambda t: (t[1]["repo_id"], t[1]["revision"], str(t[1].get("scheduler")),
+                         str((t[1].get("lora") or {}).get("repo_id"))))
+
+results = {b["batch_id"]: [] for b in bundles}
+for i, (batch_id, job) in enumerate(work, 1):
+    out_dir = OUT/batch_id/"images"; out_dir.mkdir(parents=True, exist_ok=True)
     t0 = time.perf_counter()
     try:
         pipe = get_pipe(job)
@@ -129,7 +143,7 @@ for i, job in enumerate(jobs, 1):
         if job["guidance_scale"] > 1.0:
             kw["negative_prompt"] = job["negative_prompt"]
         img = pipe(**kw).images[0]
-        target = OUT/"images"/job["output_name"]
+        target = out_dir/job["output_name"]
         img.save(target, format="PNG")
         peak = torch.cuda.max_memory_allocated()/1e6 if torch.cuda.is_available() else None
         rec = dict(job_id=job["job_id"], status="ok",
@@ -137,43 +151,51 @@ for i, job in enumerate(jobs, 1):
                    sha256=sha256_file(target),
                    runtime_sec=round(time.perf_counter()-t0,3),
                    peak_rss_mb=None, peak_accelerator_mb=(round(peak,1) if peak else None),
-                   device=DEVICE, backend="notebook")
-        print(f"[{i}/{len(jobs)}] ok   {job['job_id']}  {rec['runtime_sec']}s  peakGPU={rec['peak_accelerator_mb']}MB")
+                   device=DEVICE, backend="notebook", dtype=str(DTYPE).replace("torch.",""))
+        print(f"[{i}/{len(work)}] ok   {batch_id}/{job['job_id']}  {rec['runtime_sec']}s  peakGPU={rec['peak_accelerator_mb']}MB")
     except Exception as e:
         rec = dict(job_id=job["job_id"], status="error", image_path=None, sha256=None,
                    runtime_sec=round(time.perf_counter()-t0,3), peak_rss_mb=None,
-                   device=DEVICE, backend="notebook", error=f"{type(e).__name__}: {e}")
-        print(f"[{i}/{len(jobs)}] FAIL {job['job_id']}: {rec['error']}")
-    results.append(rec)
+                   device=DEVICE, backend="notebook", dtype=str(DTYPE).replace("torch.",""),
+                   error=f"{type(e).__name__}: {e}")
+        print(f"[{i}/{len(work)}] FAIL {batch_id}/{job['job_id']}: {rec['error']}")
+    results[batch_id].append(rec)
 
-print(f"\\n{sum(1 for r in results if r['status']=='ok')}/{len(results)} succeeded")
+ok = sum(1 for rs in results.values() for r in rs if r["status"]=="ok")
+print(f"\\n{ok}/{len(work)} succeeded")
 '''
 
 CELL_PACK = '''\
 # ---- package results for local ingestion ----------------------------------
-import json, shutil, platform, subprocess, sys
+import json, shutil, platform
 from pathlib import Path
 
-(OUT/"results.json").write_text(json.dumps({
-    "batch_id": bundle["batch_id"],
-    "route": "notebook",
-    "environment": {
-        "provider": "kaggle",
-        "device": DEVICE,
-        "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
-        "torch": torch.__version__,
-        "python": platform.python_version(),
-    },
-    "results": results,
-}, indent=2, sort_keys=True))
+env = {
+    "provider": "kaggle",
+    "device": DEVICE,
+    "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+    "torch": torch.__version__,
+    "python": platform.python_version(),
+    "dtype": str(DTYPE).replace("torch.", ""),
+}
+
+for b in bundles:
+    bid = b["batch_id"]
+    (OUT/bid).mkdir(parents=True, exist_ok=True)
+    (OUT/bid/"results.json").write_text(json.dumps({
+        "batch_id": bid, "route": "notebook",
+        "environment": env, "results": results[bid],
+    }, indent=2, sort_keys=True))
 
 shutil.copy("requirements_notebook.txt", OUT/"requirements_notebook.txt")
-archive = shutil.make_archive(f"/kaggle/working/results_{bundle['batch_id']}", "zip", OUT)
+(OUT/"environment.json").write_text(json.dumps(env, indent=2, sort_keys=True))
+archive = shutil.make_archive("/kaggle/working/results_all", "zip", OUT)
 print("download this file ->", archive)
-print("then run locally:")
-print(f"  openavatar ingest runs/{bundle['batch_id']} results_{bundle['batch_id']}.zip")
-print(f"  openavatar validate runs/{bundle['batch_id']}")
-print(f"  openavatar evaluate runs/{bundle['batch_id']}")
+print()
+print("then run locally, from the repo root:")
+print("  unzip -o results_all.zip -d results_all")
+for b in bundles:
+    print(f"  openavatar ingest runs/{b['batch_id']} results_all/{b['batch_id']}")
 '''
 
 

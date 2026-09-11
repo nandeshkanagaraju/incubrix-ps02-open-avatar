@@ -104,8 +104,11 @@ def validate_item(job: Job, result: dict, images_dir: Path, rules: dict) -> Item
     size = path.stat().st_size
     details["bytes"] = size
     if size < rules.get("min_file_bytes", 1024):
+        # Flag it, but keep going: an all-black frame from a NaN-producing
+        # pipeline is both suspiciously small AND blank, and the blank verdict
+        # is the one that names the actual defect. Returning here would report
+        # only the byte count and hide the diagnosis.
         codes.append("EMPTY_FILE")
-        return ItemValidation(job.job_id, False, codes, details)
 
     try:
         w, h, stddev = _pixel_stats(path)
