@@ -15,21 +15,24 @@ from huggingface_hub import snapshot_download  # noqa: E402
 
 from openavatar.config import Config  # noqa: E402
 
-# Only the diffusers subfolder layout. The repo also ships single-file
-# checkpoints (v1-5-pruned*.safetensors, ~12 GB) that from_pretrained never
-# reads - excluding them keeps the local footprint near 2 GB.
+# Diffusers reads the subfolder layout only. The SD 1.5 repo also ships
+# single-file checkpoints (~12 GB) and fp16 duplicates of every shard; pulling
+# either wastes bandwidth and disk. Listing exact paths keeps the footprint at
+# ~4.3 GB, and torch casts to float16 at load time where the device wants it.
 SD_ALLOW = [
     "model_index.json",
-    "scheduler/*.json",
-    "tokenizer/*",
+    "scheduler/scheduler_config.json",
+    "tokenizer/vocab.json", "tokenizer/merges.txt",
+    "tokenizer/special_tokens_map.json", "tokenizer/tokenizer_config.json",
     "text_encoder/config.json", "text_encoder/model.safetensors",
     "unet/config.json", "unet/diffusion_pytorch_model.safetensors",
     "vae/config.json", "vae/diffusion_pytorch_model.safetensors",
-    # LoRA repos ship a single top-level weights file.
-    "*.safetensors",
 ]
-SD_IGNORE = ["*.ckpt", "*.bin", "*.pt", "*nonema*", "v1-5-pruned*",
-              "*.msgpack", "*.onnx*", "safety_checker/*", "feature_extractor/*"]
+SD_IGNORE = ["*.ckpt", "*.bin", "*.pt", "*.msgpack", "*.onnx*", "*.fp16.*",
+             "*nonema*", "v1-5-pruned*", "safety_checker/*", "feature_extractor/*"]
+
+# LoRA repos are a single top-level weights file plus a config.
+LORA_ALLOW = ["*.json", "*.safetensors"]
 
 
 def main() -> int:
@@ -44,17 +47,16 @@ def main() -> int:
 
     for key in keys:
         m = cfg.model(key)
-        for repo_id, revision in [(m["repo_id"], m["revision"])] + (
-            [(m["lora"]["repo_id"], m["lora"]["revision"])] if m.get("lora") else []
-        ):
+        targets = [(m["repo_id"], m["revision"], SD_ALLOW, SD_IGNORE)]
+        if m.get("lora"):
+            targets.append((m["lora"]["repo_id"], m["lora"]["revision"], LORA_ALLOW, []))
+        for repo_id, revision, allow, ignore in targets:
             if (repo_id, revision) in seen:
                 continue
             seen.add((repo_id, revision))
             print(f"[download] {repo_id}@{revision[:12]}", flush=True)
-            snapshot_download(
-                repo_id=repo_id, revision=revision,
-                allow_patterns=SD_ALLOW, ignore_patterns=SD_IGNORE,
-            )
+            snapshot_download(repo_id=repo_id, revision=revision,
+                              allow_patterns=allow, ignore_patterns=ignore)
 
     met = cfg.metrics
     for repo_id, revision in [
