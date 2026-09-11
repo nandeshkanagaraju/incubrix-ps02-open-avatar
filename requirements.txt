@@ -1,0 +1,16 @@
+# Pinned for reproducibility (macOS arm64 / Linux x86_64, Python 3.11)
+torch==2.8.0
+torchvision==0.23.0
+diffusers==0.35.1
+transformers==4.56.1
+accelerate==1.10.1
+peft==0.17.1
+safetensors==0.6.2
+huggingface-hub==0.34.4
+pillow==11.3.0
+numpy==2.2.6
+pydantic==2.11.7
+typer==0.16.1
+rich==14.1.0
+psutil==7.0.0
+pytest==8.4.2

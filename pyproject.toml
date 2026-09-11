@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openavatar"
+version = "0.1.0"
+description = "Open-source human-avatar generation orchestrator (IncuBrix PS02 / Track 02)"
+requires-python = ">=3.10"
+dependencies = [
+  "torch==2.8.0", "torchvision==0.23.0", "diffusers==0.35.1",
+  "transformers==4.56.1", "accelerate==1.10.1", "peft==0.17.1",
+  "safetensors==0.6.2", "huggingface-hub==0.34.4", "pillow==11.3.0",
+  "numpy==2.2.6", "pydantic==2.11.7", "typer==0.16.1", "rich==14.1.0",
+  "psutil==7.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2"]
+
+[project.scripts]
+openavatar = "openavatar.cli:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["slow: requires model weights / real inference"]

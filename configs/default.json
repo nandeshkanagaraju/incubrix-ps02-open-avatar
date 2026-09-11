@@ -1,0 +1,64 @@
+{
+  "output_root": "runs",
+  "consent_registry": "consent/consent_registry.json",
+  "reference_dir": "consent/reference_images",
+  "hf_cache": null,
+  "device": "auto",
+  "models": {
+    "sd15": {
+      "repo_id": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+      "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+      "pipeline": "StableDiffusionPipeline",
+      "dtype": "float32",
+      "default_steps": 20,
+      "default_guidance": 7.0,
+      "lora": null,
+      "code_license": "Apache-2.0 (diffusers)",
+      "weights_license": "CreativeML OpenRAIL-M",
+      "commercial_use": "permitted with use restrictions (Attachment A)",
+      "role": "primary generator"
+    },
+    "sd15_lcm": {
+      "repo_id": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+      "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+      "pipeline": "StableDiffusionPipeline",
+      "dtype": "float32",
+      "default_steps": 6,
+      "default_guidance": 1.5,
+      "scheduler": "LCM",
+      "lora": {
+        "repo_id": "latent-consistency/lcm-lora-sdv1-5",
+        "revision": "cf2fced511dbe7e26c8d1d397e728fbab875db4b",
+        "weight_name": "pytorch_lora_weights.safetensors"
+      },
+      "code_license": "Apache-2.0 (diffusers, peft)",
+      "weights_license": "CreativeML OpenRAIL-M (base) + openrail++ (LCM-LoRA)",
+      "commercial_use": "permitted with use restrictions",
+      "role": "conditioning-approach comparison (few-step distillation)"
+    },
+    "sdturbo": {
+      "repo_id": "stabilityai/sd-turbo",
+      "revision": "b261bac6fd2cf515557d5d0707481eafa0485ec2",
+      "pipeline": "AutoPipelineForText2Image",
+      "dtype": "float32",
+      "default_steps": 4,
+      "default_guidance": 0.0,
+      "lora": null,
+      "code_license": "Apache-2.0 (diffusers)",
+      "weights_license": "Stability AI Non-Commercial Research Community License",
+      "commercial_use": "NOT permitted - research comparison only",
+      "role": "second open model for comparison"
+    }
+  },
+  "metrics": {
+    "clip_model": "openai/clip-vit-base-patch32",
+    "clip_revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+    "identity_model": "facebook/dinov2-small",
+    "identity_revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056"
+  },
+  "validation": {
+    "min_file_bytes": 1024,
+    "min_pixel_stddev": 6.0,
+    "require_exact_dimensions": true
+  }
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+runs/**/images/
+runs/**/bench/
+runs/**/_ingest_staging/
+consent/reference_images/
+!evidence/**
+.DS_Store

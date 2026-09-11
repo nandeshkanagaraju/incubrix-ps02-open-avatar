@@ -1,0 +1,32 @@
+{
+  "appearance": {
+    "age_band": "adult",
+    "attire": "collared-shirt",
+    "expression": "neutral",
+    "eyewear": "none",
+    "facial_hair": "none",
+    "hair_colour": "dark-brown",
+    "hair_length": "shoulder-length",
+    "hair_texture": "wavy",
+    "presentation": "feminine",
+    "skin_tone": "mst-6"
+  },
+  "extra_prompt": "make them look professional and attractive, something nice",
+  "identity_id": null,
+  "intent": "fictional",
+  "notes": "EXPECT NEEDS_CLARIFICATION: subjective, underspecified terms",
+  "region_context": null,
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 3001,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "neutral-grey-studio",
+    "pose": "front-facing-headshot"
+  },
+  "spec_id": "c1_ambiguous"
+}
