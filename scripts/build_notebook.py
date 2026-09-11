@@ -34,11 +34,12 @@ on policy grounds even for the fictional batches.
 
 ## How to run
 1. Create a new Kaggle notebook, set Accelerator = GPU.
-2. Upload the bundle zip produced by `openavatar export runs/<batch_id>` as a
-   Kaggle Dataset, or drag `bundle.json` into `/kaggle/working`.
-3. Set `BUNDLE_JSON` below to its path and Run All.
-4. Download `results_<batch_id>.zip` from the output pane.
-5. Locally: `openavatar ingest runs/<batch_id> results_<batch_id>.zip`
+2. Upload `submission/bundles.zip` (from `scripts/export_all.sh`) as a Kaggle
+   Dataset, or drag it into the file browser. Kaggle may auto-expand it.
+3. Run All. The staging cell finds the bundles wherever Kaggle placed them.
+4. Download `results_all.zip` from the output pane.
+5. Locally: `unzip -o results_all.zip -d results_all` then
+   `openavatar ingest runs/<batch_id> results_all/<batch_id>` for each batch.
 """
 
 CELL_ENV = '''\
@@ -53,6 +54,50 @@ print("pip freeze -> requirements_notebook.txt")
 open("requirements_notebook.txt","w").write(
     subprocess.run([sys.executable,"-m","pip","freeze"],capture_output=True,text=True).stdout)
 '''
+
+CELL_STAGE = """\
+# ---- stage the uploaded bundles -------------------------------------------
+# Kaggle expands an uploaded zip into /kaggle/input/<dataset>/ automatically, and
+# where exactly it lands depends on how it was added (Dataset vs dragged file).
+# Rather than hardcode a path, find every file that *is* a bundle by its schema
+# and stage it. Idempotent - safe to re-run.
+import json, shutil, zipfile
+from pathlib import Path
+
+DEST = Path("/kaggle/working/bundles"); DEST.mkdir(parents=True, exist_ok=True)
+
+for z in Path("/kaggle").rglob("bundles.zip"):
+    print("expanding archive:", z)
+    with zipfile.ZipFile(z) as zf:
+        zf.extractall("/kaggle/working/_unzipped")
+
+found = {}
+for root in ("/kaggle/input", "/kaggle/working"):
+    r = Path(root)
+    if not r.exists():
+        continue
+    for p in r.rglob("*.json"):
+        if DEST in p.parents:
+            continue
+        try:
+            d = json.loads(p.read_text())
+        except Exception:
+            continue
+        if isinstance(d, dict) and d.get("schema_version") == 2 and "jobs" in d:
+            found[d["batch_id"]] = p
+
+for bid, p in sorted(found.items()):
+    shutil.copy(p, DEST / f"{bid}.json")
+    print(f"  staged {bid:18s} <- {p}")
+
+print(f"\\n{len(found)} bundle(s) staged in {DEST}")
+if not found:
+    print("\\nNothing found. Contents of /kaggle/input:")
+    for p in sorted(Path("/kaggle/input").rglob("*"))[:40]:
+        print("   ", p)
+    raise SystemExit("upload bundles.zip and re-run this cell")
+"""
+
 
 CELL_LOAD = '''\
 # ---- load every locally-prepared bundle -----------------------------------
@@ -212,10 +257,11 @@ def main() -> None:
         "cells": [
             cell(MD_INTRO, "markdown"),
             cell("## 1. Pinned environment", "markdown"), cell(CELL_ENV),
-            cell("## 2. Load the locally-prepared job bundle", "markdown"), cell(CELL_LOAD),
-            cell("## 3. Pipeline cache (pinned revisions from the bundle)", "markdown"), cell(CELL_PIPE),
-            cell("## 4. Execute jobs", "markdown"), cell(CELL_RUN),
-            cell("## 5. Package results for `openavatar ingest`", "markdown"), cell(CELL_PACK),
+            cell("## 2. Stage the uploaded bundles", "markdown"), cell(CELL_STAGE),
+            cell("## 3. Load the locally-prepared job bundles", "markdown"), cell(CELL_LOAD),
+            cell("## 4. Pipeline cache (pinned revisions from the bundle)", "markdown"), cell(CELL_PIPE),
+            cell("## 5. Execute jobs", "markdown"), cell(CELL_RUN),
+            cell("## 6. Package results for `openavatar ingest`", "markdown"), cell(CELL_PACK),
         ],
         "metadata": {
             "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
