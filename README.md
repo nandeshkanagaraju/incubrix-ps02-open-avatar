@@ -82,7 +82,7 @@ python scripts/download_models.py            # ~4.3 GB for sd15; add --only sd15
 Verify with no weights and no network:
 
 ```bash
-pytest -q                                    # 64 tests, stub backend only
+pytest -q                                    # 67 tests, stub backend only
 openavatar plan specs/batch_c_edge --batch-id demo
 openavatar render runs/demo --backend stub
 openavatar validate runs/demo
@@ -167,7 +167,7 @@ Every decision is appended to `safety_log.jsonl` with stable reason codes.
 ## Testing
 
 ```bash
-pytest -q                                   # 64 offline tests
+pytest -q                                   # 67 offline tests
 OPENAVATAR_RUN_SLOW=1 pytest -m slow        # real diffusion, needs cached weights
 ```
 

@@ -37,3 +37,5 @@
 {"ts": "2026-09-11T13:11:54.735641+00:00", "level": "INFO", "logger": "openavatar.bench", "message": "bench a2_studio_portrait__sd15__s1002 rep 1/3: 18.52s"}
 {"ts": "2026-09-11T13:12:13.368274+00:00", "level": "INFO", "logger": "openavatar.bench", "message": "bench a2_studio_portrait__sd15__s1002 rep 2/3: 18.62s"}
 {"ts": "2026-09-11T13:12:32.180313+00:00", "level": "INFO", "logger": "openavatar.bench", "message": "bench a2_studio_portrait__sd15__s1002 rep 3/3: 18.81s"}
+{"ts": "2026-09-11T13:17:35.154469+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading CLIP openai/clip-vit-base-patch32@3d74acf9a28c"}
+{"ts": "2026-09-11T13:17:38.428689+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading identity backbone facebook/dinov2-small@ed25f3a31f01"}

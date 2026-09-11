@@ -20,7 +20,7 @@ initial versions of:
 
 - `src/openavatar/` — all ten modules (`spec`, `attributes`, `prompt`, `safety`,
   `config`, `jobs`, `backends`, `render`, `validate`, `metrics`, `bench`, `cli`)
-- `tests/` — all 64 tests
+- `tests/` — all 67 tests
 - `scripts/` — `download_models.py`, `make_specs.py`, `build_notebook.py`,
   `corrupt_output.py`
 - `notebooks/kaggle_executor.ipynb` (via the generator script)
@@ -51,7 +51,19 @@ was caught:
    attempted cleanup deleted blobs that were symlink targets and corrupted the
    cache. The cache was wiped and re-fetched with an exact per-subfolder
    allow-list.
-3. **Two failing tests on the first run of the validator suite.** The stub
+3. **Adherence metric measured only 7 of 11 attributes.** Found by comparing a
+   generated image against its spec by eye: `a1` requested a feminine
+   presentation and produced a visibly masculine portrait, yet scored 6/7.
+   `attribute_probes` never covered presentation, hair texture, hair colour or
+   facial hair, so those attributes could not miss and the reported adherence was
+   structurally optimistic. All twelve are now probed, with a test that fails if a
+   prompt-visible attribute is ever added without one.
+4. **Two misleading benchmark figures.** Model size was reported as 23.6 GB
+   (summing repository files the pipeline never loads; the real figure is
+   4265 MB) and process RSS as 36 MB while holding a 4 GB model (on MPS the
+   weights live in Metal unified memory outside RSS; peak RSS is 1662 MB). Both
+   are now measured correctly and carry an explanatory note.
+5. **Two failing tests on the first run of the validator suite.** The stub
    backend emitted a pure gradient that compressed below the 1 KB `EMPTY_FILE`
    floor, so truncating it tripped the byte check instead of the decode check the
    tests were targeting. Fixed at the source — the stub now emits deterministic
@@ -60,7 +72,7 @@ was caught:
 
 ## Verification performed
 
-- `pytest -q` — 64 tests pass offline with no weights and no network.
+- `pytest -q` — 67 tests pass offline with no weights and no network.
 - Every generated image in `evidence/` came from an actual local execution of
   this code; none is illustrative or hand-made.
 - All metrics in `docs/REPORT.md` and the workbook were produced by

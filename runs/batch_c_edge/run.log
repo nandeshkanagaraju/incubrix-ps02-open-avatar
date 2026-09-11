@@ -1,3 +1,5 @@
 {"ts": "2026-09-11T11:57:00.850197+00:00", "level": "INFO", "logger": "openavatar.render", "message": "ingested 1 result records from submission/results_all/batch_c_edge"}
 {"ts": "2026-09-11T11:58:06.034361+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading CLIP openai/clip-vit-base-patch32@3d74acf9a28c"}
 {"ts": "2026-09-11T11:58:08.834998+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading identity backbone facebook/dinov2-small@ed25f3a31f01"}
+{"ts": "2026-09-11T13:18:15.491088+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading CLIP openai/clip-vit-base-patch32@3d74acf9a28c"}
+{"ts": "2026-09-11T13:18:18.533775+00:00", "level": "INFO", "logger": "openavatar.metrics", "message": "loading identity backbone facebook/dinov2-small@ed25f3a31f01"}

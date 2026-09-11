@@ -2,7 +2,7 @@
   "batch_id": "batch_a_sd15",
   "by_model": {
     "sd15": {
-      "mean_attribute_accuracy": 0.5804,
+      "mean_attribute_accuracy": 0.6389,
       "mean_clip_score": 28.834,
       "n": 6
     }
@@ -75,7 +75,7 @@
   "n_scored": 6,
   "per_image": {
     "a1_studio_portrait__sd15__s1001": {
-      "attribute_accuracy": 0.8571,
+      "attribute_accuracy": 0.6667,
       "clip_score": 21.585,
       "model_key": "sd15",
       "per_attribute": {
@@ -86,34 +86,64 @@
           "positive": 0.2118
         },
         "attire": {
-          "contrast": 0.2093,
+          "contrast": 0.2244,
           "hit": true,
-          "margin": 0.0766,
-          "positive": 0.2859
+          "margin": 0.0685,
+          "positive": 0.2929
         },
         "background": {
-          "contrast": 0.2494,
+          "contrast": 0.278,
           "hit": true,
-          "margin": 0.009,
-          "positive": 0.2584
+          "margin": 0.0046,
+          "positive": 0.2825
         },
         "expression": {
-          "contrast": 0.2309,
+          "contrast": 0.2533,
+          "hit": false,
+          "margin": -0.008,
+          "positive": 0.2453
+        },
+        "eyewear": {
+          "contrast": 0.238,
           "hit": true,
-          "margin": 0.0135,
-          "positive": 0.2443
+          "margin": 0.0016,
+          "positive": 0.2396
+        },
+        "facial_hair": {
+          "contrast": 0.201,
+          "hit": true,
+          "margin": 0.0411,
+          "positive": 0.2421
+        },
+        "hair_colour": {
+          "contrast": 0.2485,
+          "hit": true,
+          "margin": 0.0031,
+          "positive": 0.2515
         },
         "hair_length": {
-          "contrast": 0.2075,
+          "contrast": 0.2226,
           "hit": true,
-          "margin": 0.0073,
-          "positive": 0.2149
+          "margin": 0.0147,
+          "positive": 0.2373
+        },
+        "hair_texture": {
+          "contrast": 0.2271,
+          "hit": false,
+          "margin": -0.0047,
+          "positive": 0.2225
         },
         "pose": {
-          "contrast": 0.2581,
+          "contrast": 0.2694,
           "hit": false,
-          "margin": -0.0172,
-          "positive": 0.2409
+          "margin": -0.0327,
+          "positive": 0.2367
+        },
+        "presentation": {
+          "contrast": 0.2388,
+          "hit": false,
+          "margin": -0.0177,
+          "positive": 0.2211
         },
         "skin_tone": {
           "contrast": 0.2569,
@@ -125,7 +155,7 @@
       "spec_id": "a1_studio_portrait"
     },
     "a2_studio_portrait__sd15__s1002": {
-      "attribute_accuracy": 0.7143,
+      "attribute_accuracy": 0.75,
       "clip_score": 29.69,
       "model_key": "sd15",
       "per_attribute": {
@@ -136,34 +166,64 @@
           "positive": 0.2069
         },
         "attire": {
-          "contrast": 0.2218,
+          "contrast": 0.2403,
           "hit": true,
-          "margin": 0.0492,
-          "positive": 0.271
+          "margin": 0.0467,
+          "positive": 0.287
         },
         "background": {
-          "contrast": 0.2496,
-          "hit": true,
-          "margin": 0.0008,
-          "positive": 0.2504
+          "contrast": 0.2693,
+          "hit": false,
+          "margin": -0.0117,
+          "positive": 0.2577
         },
         "expression": {
-          "contrast": 0.2605,
+          "contrast": 0.2627,
           "hit": false,
-          "margin": -0.0435,
-          "positive": 0.217
+          "margin": -0.0147,
+          "positive": 0.248
+        },
+        "eyewear": {
+          "contrast": 0.2361,
+          "hit": true,
+          "margin": 0.0021,
+          "positive": 0.2382
+        },
+        "facial_hair": {
+          "contrast": 0.2416,
+          "hit": true,
+          "margin": 0.0245,
+          "positive": 0.2661
+        },
+        "hair_colour": {
+          "contrast": 0.2479,
+          "hit": false,
+          "margin": -0.0034,
+          "positive": 0.2445
         },
         "hair_length": {
-          "contrast": 0.2191,
-          "hit": false,
-          "margin": -0.0013,
-          "positive": 0.2178
+          "contrast": 0.2372,
+          "hit": true,
+          "margin": 0.0022,
+          "positive": 0.2394
+        },
+        "hair_texture": {
+          "contrast": 0.2445,
+          "hit": true,
+          "margin": 0.0004,
+          "positive": 0.245
         },
         "pose": {
-          "contrast": 0.2452,
+          "contrast": 0.2429,
           "hit": true,
-          "margin": 0.0242,
+          "margin": 0.0265,
           "positive": 0.2693
+        },
+        "presentation": {
+          "contrast": 0.2123,
+          "hit": true,
+          "margin": 0.0211,
+          "positive": 0.2334
         },
         "skin_tone": {
           "contrast": 0.2567,
@@ -175,7 +235,7 @@
       "spec_id": "a2_studio_portrait"
     },
     "a3_studio_portrait__sd15__s1003": {
-      "attribute_accuracy": 0.625,
+      "attribute_accuracy": 0.75,
       "clip_score": 31.849,
       "model_key": "sd15",
       "per_attribute": {
@@ -186,40 +246,64 @@
           "positive": 0.2131
         },
         "attire": {
-          "contrast": 0.1955,
+          "contrast": 0.2168,
           "hit": true,
-          "margin": 0.0208,
-          "positive": 0.2163
+          "margin": 0.0224,
+          "positive": 0.2392
         },
         "background": {
-          "contrast": 0.227,
+          "contrast": 0.2473,
           "hit": false,
-          "margin": -0.0344,
-          "positive": 0.1925
+          "margin": -0.0289,
+          "positive": 0.2184
         },
         "expression": {
-          "contrast": 0.2128,
+          "contrast": 0.2449,
           "hit": false,
-          "margin": -0.022,
-          "positive": 0.1908
+          "margin": -0.0329,
+          "positive": 0.2119
         },
         "eyewear": {
-          "contrast": 0.2732,
+          "contrast": 0.2663,
           "hit": false,
-          "margin": -0.0062,
-          "positive": 0.267
+          "margin": -0.0017,
+          "positive": 0.2646
+        },
+        "facial_hair": {
+          "contrast": 0.1632,
+          "hit": true,
+          "margin": 0.007,
+          "positive": 0.1702
+        },
+        "hair_colour": {
+          "contrast": 0.2429,
+          "hit": true,
+          "margin": 0.0197,
+          "positive": 0.2626
         },
         "hair_length": {
-          "contrast": 0.1733,
+          "contrast": 0.197,
           "hit": true,
-          "margin": 0.0567,
-          "positive": 0.2301
+          "margin": 0.0405,
+          "positive": 0.2375
+        },
+        "hair_texture": {
+          "contrast": 0.219,
+          "hit": true,
+          "margin": 0.0096,
+          "positive": 0.2286
         },
         "pose": {
-          "contrast": 0.2269,
+          "contrast": 0.2211,
           "hit": true,
-          "margin": 0.0039,
-          "positive": 0.2308
+          "margin": 0.0161,
+          "positive": 0.2372
+        },
+        "presentation": {
+          "contrast": 0.2033,
+          "hit": true,
+          "margin": 0.0274,
+          "positive": 0.2307
         },
         "skin_tone": {
           "contrast": 0.2459,
@@ -231,7 +315,7 @@
       "spec_id": "a3_studio_portrait"
     },
     "a4_studio_portrait__sd15__s1004": {
-      "attribute_accuracy": 0.4286,
+      "attribute_accuracy": 0.6667,
       "clip_score": 30.634,
       "model_key": "sd15",
       "per_attribute": {
@@ -242,34 +326,64 @@
           "positive": 0.2438
         },
         "attire": {
-          "contrast": 0.2009,
-          "hit": false,
-          "margin": -0.006,
-          "positive": 0.1949
+          "contrast": 0.2136,
+          "hit": true,
+          "margin": 0.0062,
+          "positive": 0.2198
         },
         "background": {
-          "contrast": 0.2246,
+          "contrast": 0.2353,
           "hit": true,
-          "margin": 0.0117,
-          "positive": 0.2363
+          "margin": 0.0097,
+          "positive": 0.245
         },
         "expression": {
-          "contrast": 0.2298,
+          "contrast": 0.2361,
+          "hit": true,
+          "margin": 0.0019,
+          "positive": 0.2379
+        },
+        "eyewear": {
+          "contrast": 0.1917,
+          "hit": true,
+          "margin": 0.0436,
+          "positive": 0.2353
+        },
+        "facial_hair": {
+          "contrast": 0.2391,
           "hit": false,
-          "margin": -0.0213,
-          "positive": 0.2085
+          "margin": -0.014,
+          "positive": 0.2251
+        },
+        "hair_colour": {
+          "contrast": 0.2326,
+          "hit": false,
+          "margin": -0.0035,
+          "positive": 0.2291
         },
         "hair_length": {
-          "contrast": 0.197,
+          "contrast": 0.2221,
           "hit": true,
-          "margin": 0.0041,
-          "positive": 0.2011
+          "margin": 0.0078,
+          "positive": 0.2299
+        },
+        "hair_texture": {
+          "contrast": 0.2044,
+          "hit": true,
+          "margin": 0.0189,
+          "positive": 0.2233
         },
         "pose": {
-          "contrast": 0.2478,
+          "contrast": 0.2374,
           "hit": false,
-          "margin": -0.0163,
-          "positive": 0.2315
+          "margin": -0.008,
+          "positive": 0.2294
+        },
+        "presentation": {
+          "contrast": 0.1978,
+          "hit": true,
+          "margin": 0.0307,
+          "positive": 0.2286
         },
         "skin_tone": {
           "contrast": 0.2212,
@@ -281,7 +395,7 @@
       "spec_id": "a4_studio_portrait"
     },
     "a5_studio_portrait__sd15__s1005": {
-      "attribute_accuracy": 0.5714,
+      "attribute_accuracy": 0.5,
       "clip_score": 29.941,
       "model_key": "sd15",
       "per_attribute": {
@@ -292,34 +406,64 @@
           "positive": 0.208
         },
         "attire": {
-          "contrast": 0.2079,
+          "contrast": 0.2334,
           "hit": true,
-          "margin": 0.0303,
-          "positive": 0.2381
+          "margin": 0.0083,
+          "positive": 0.2417
         },
         "background": {
-          "contrast": 0.2489,
+          "contrast": 0.2784,
           "hit": false,
-          "margin": -0.0099,
-          "positive": 0.239
+          "margin": -0.029,
+          "positive": 0.2494
         },
         "expression": {
-          "contrast": 0.2234,
+          "contrast": 0.2567,
+          "hit": false,
+          "margin": -0.0129,
+          "positive": 0.2438
+        },
+        "eyewear": {
+          "contrast": 0.2395,
+          "hit": false,
+          "margin": -0.003,
+          "positive": 0.2365
+        },
+        "facial_hair": {
+          "contrast": 0.1661,
           "hit": true,
-          "margin": 0.0026,
-          "positive": 0.226
+          "margin": 0.0202,
+          "positive": 0.1863
+        },
+        "hair_colour": {
+          "contrast": 0.2661,
+          "hit": false,
+          "margin": -0.003,
+          "positive": 0.2631
         },
         "hair_length": {
-          "contrast": 0.2075,
+          "contrast": 0.2312,
           "hit": false,
-          "margin": -0.0095,
-          "positive": 0.198
+          "margin": -0.0094,
+          "positive": 0.2218
+        },
+        "hair_texture": {
+          "contrast": 0.2531,
+          "hit": false,
+          "margin": -0.0316,
+          "positive": 0.2214
         },
         "pose": {
-          "contrast": 0.2527,
-          "hit": false,
-          "margin": -0.0066,
-          "positive": 0.2461
+          "contrast": 0.2509,
+          "hit": true,
+          "margin": 0.0049,
+          "positive": 0.2558
+        },
+        "presentation": {
+          "contrast": 0.2115,
+          "hit": true,
+          "margin": 0.0206,
+          "positive": 0.232
         },
         "skin_tone": {
           "contrast": 0.2505,
@@ -331,7 +475,7 @@
       "spec_id": "a5_studio_portrait"
     },
     "a6_studio_portrait__sd15__s1006": {
-      "attribute_accuracy": 0.2857,
+      "attribute_accuracy": 0.5,
       "clip_score": 29.306,
       "model_key": "sd15",
       "per_attribute": {
@@ -342,34 +486,52 @@
           "positive": 0.1957
         },
         "attire": {
-          "contrast": 0.188,
+          "contrast": 0.1922,
           "hit": true,
-          "margin": 0.15,
-          "positive": 0.338
+          "margin": 0.1542,
+          "positive": 0.3464
         },
         "background": {
-          "contrast": 0.2215,
+          "contrast": 0.2302,
           "hit": false,
-          "margin": -0.014,
-          "positive": 0.2075
+          "margin": -0.0013,
+          "positive": 0.2288
         },
         "expression": {
-          "contrast": 0.2249,
+          "contrast": 0.2436,
           "hit": false,
-          "margin": -0.0206,
-          "positive": 0.2043
+          "margin": -0.0383,
+          "positive": 0.2052
+        },
+        "eyewear": {
+          "contrast": 0.2076,
+          "hit": true,
+          "margin": 0.0128,
+          "positive": 0.2205
+        },
+        "facial_hair": {
+          "contrast": 0.171,
+          "hit": true,
+          "margin": 0.0149,
+          "positive": 0.186
         },
         "hair_length": {
-          "contrast": 0.2266,
+          "contrast": 0.2339,
           "hit": false,
-          "margin": -0.0132,
-          "positive": 0.2134
+          "margin": -0.0152,
+          "positive": 0.2187
         },
         "pose": {
-          "contrast": 0.2323,
+          "contrast": 0.2252,
           "hit": false,
-          "margin": -0.0234,
-          "positive": 0.2089
+          "margin": -0.0148,
+          "positive": 0.2104
+        },
+        "presentation": {
+          "contrast": 0.2085,
+          "hit": true,
+          "margin": 0.0335,
+          "positive": 0.242
         },
         "skin_tone": {
           "contrast": 0.2821,

@@ -58,3 +58,27 @@ def test_attribute_probes_are_discriminative():
     pos, contrast = probes["attire"]
     assert "lab coat" in pos
     assert pos != contrast
+
+
+def test_every_requested_attribute_is_probed():
+    """An unmeasured attribute cannot miss, so it silently inflates adherence.
+
+    Regression: the first version of attribute_probes covered 7 of 11 attributes,
+    omitting presentation / hair_texture / hair_colour / facial_hair.
+    """
+    spec = _spec(appearance={"presentation": "feminine", "hair_texture": "coily",
+                             "hair_colour": "black", "facial_hair": "none",
+                             "eyewear": "none"})
+    probes = attribute_probes(spec)
+    required = {"age_band", "presentation", "skin_tone", "hair_length", "hair_texture",
+                "hair_colour", "facial_hair", "eyewear", "expression", "attire",
+                "background", "pose"}
+    assert required <= set(probes), f"unprobed attributes: {required - set(probes)}"
+
+
+def test_probe_pairs_are_distinct_and_non_empty():
+    for spec in (_spec(), _spec(appearance={"hair_length": "shaved", "hair_texture": "none",
+                                            "hair_colour": "none", "facial_hair": "full-beard"})):
+        for field, (pos, neg) in attribute_probes(spec).items():
+            assert pos.strip() and neg.strip(), f"{field} has an empty probe"
+            assert pos != neg, f"{field} probe is not discriminative"

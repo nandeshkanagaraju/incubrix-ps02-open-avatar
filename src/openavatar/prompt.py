@@ -84,32 +84,92 @@ def build_prompt(spec: AvatarSpec) -> str:
 def attribute_probes(spec: AvatarSpec) -> dict[str, tuple[str, str]]:
     """Per-attribute (positive, contrast) text pairs used by the adherence metric.
 
-    For each controlled attribute we produce the phrase that *was* requested and
-    a phrase from the same vocabulary that was *not*, so CLIP is asked a
-    discriminative question rather than an absolute one.
+    For each requested attribute we produce a sentence describing what *was*
+    asked for and a sentence describing a value from the same vocabulary that was
+    *not*, so CLIP is asked a discriminative question rather than an absolute one.
+
+    Every attribute that reaches the prompt is probed. An earlier version covered
+    only 7 of the 11 appearance/scene attributes - it silently omitted
+    presentation, hair texture, hair colour and facial hair, which inflated the
+    reported adherence because unmeasured attributes cannot miss.
     """
     ap, sc = spec.appearance, spec.scene
     probes: dict[str, tuple[str, str]] = {}
 
-    def add(field: str, value: str, vocab: tuple[str, ...], phrase_field: str | None = None):
-        pf = phrase_field or field
-        alt = next((v for v in vocab if v != value and _phrase(pf, v)), None)
-        pos = _phrase(pf, value)
-        if pos and alt:
-            probes[field] = (f"a portrait of {pos}", f"a portrait of {_phrase(pf, alt)}")
+    def add(field: str, positive: str, contrast: str) -> None:
+        if positive and contrast and positive != contrast:
+            probes[field] = (positive, contrast)
 
-    add("age_band", ap.age_band, A.AGE_BANDS)
-    add("hair_length", ap.hair_length, A.HAIR_LENGTHS)
-    add("attire", ap.attire, A.ATTIRE)
-    add("eyewear", ap.eyewear, A.EYEWEAR) if ap.eyewear != "none" else None
-    add("expression", ap.expression, A.EXPRESSIONS)
-    add("background", sc.background, A.BACKGROUNDS)
-    add("pose", sc.pose, A.POSES)
+    def other(value: str, vocab: tuple[str, ...]) -> str:
+        return next((v for v in vocab if v != value), value)
 
-    # Skin tone uses its own phrase table.
+    # --- subject ---------------------------------------------------------
+    add("age_band",
+        f"a portrait of {_phrase('age_band', ap.age_band)}",
+        f"a portrait of {_phrase('age_band', other(ap.age_band, A.AGE_BANDS))}")
+
+    add("presentation",
+        f"a portrait of a {_phrase('presentation', ap.presentation)} person",
+        f"a portrait of a {_phrase('presentation', other(ap.presentation, A.PRESENTATIONS))} person")
+
     alt_tone = "mst-9" if ap.skin_tone != "mst-9" else "mst-2"
-    probes["skin_tone"] = (
+    add("skin_tone",
         f"a portrait of a person with {A.SKIN_TONE_PHRASES[ap.skin_tone]}",
-        f"a portrait of a person with {A.SKIN_TONE_PHRASES[alt_tone]}",
-    )
+        f"a portrait of a person with {A.SKIN_TONE_PHRASES[alt_tone]}")
+
+    # --- hair ------------------------------------------------------------
+    add("hair_length",
+        f"a portrait of a person with {_phrase('hair_length', ap.hair_length)}",
+        f"a portrait of a person with {_phrase('hair_length', other(ap.hair_length, A.HAIR_LENGTHS))}")
+
+    if ap.hair_texture != "none":
+        alt_tex = other(ap.hair_texture, tuple(t for t in A.HAIR_TEXTURES if t != "none"))
+        add("hair_texture",
+            f"a portrait of a person with {_phrase('hair_texture', ap.hair_texture)} hair",
+            f"a portrait of a person with {_phrase('hair_texture', alt_tex)} hair")
+
+    if ap.hair_colour != "none":
+        alt_col = other(ap.hair_colour, tuple(c for c in A.HAIR_COLOURS if c != "none"))
+        add("hair_colour",
+            f"a portrait of a person with {ap.hair_colour.replace('-', ' ')} hair",
+            f"a portrait of a person with {alt_col.replace('-', ' ')} hair")
+
+    if ap.facial_hair != "none":
+        alt_fh = other(ap.facial_hair, tuple(f for f in A.FACIAL_HAIR if f != "none"))
+        add("facial_hair",
+            f"a portrait of a person with {_phrase('facial_hair', ap.facial_hair)}",
+            f"a portrait of a person with {_phrase('facial_hair', alt_fh)}")
+    else:
+        add("facial_hair",
+            "a portrait of a clean-shaven person",
+            "a portrait of a person with a full beard")
+
+    # --- worn / expression ----------------------------------------------
+    if ap.eyewear != "none":
+        alt_ey = other(ap.eyewear, tuple(e for e in A.EYEWEAR if e != "none"))
+        add("eyewear",
+            f"a portrait of a person {_phrase('eyewear', ap.eyewear)}",
+            f"a portrait of a person {_phrase('eyewear', alt_ey)}")
+    else:
+        add("eyewear",
+            "a portrait of a person without glasses",
+            "a portrait of a person wearing glasses")
+
+    add("expression",
+        f"a portrait of a person with {_phrase('expression', ap.expression)}",
+        f"a portrait of a person with {_phrase('expression', other(ap.expression, A.EXPRESSIONS))}")
+
+    add("attire",
+        f"a portrait of a person {_phrase('attire', ap.attire)}",
+        f"a portrait of a person {_phrase('attire', other(ap.attire, A.ATTIRE))}")
+
+    # --- scene -----------------------------------------------------------
+    add("background",
+        f"a portrait with a {_phrase('background', sc.background)}",
+        f"a portrait with a {_phrase('background', other(sc.background, A.BACKGROUNDS))}")
+
+    add("pose",
+        f"a {_phrase('pose', sc.pose)}",
+        f"a {_phrase('pose', other(sc.pose, A.POSES))}")
+
     return probes

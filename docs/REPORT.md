@@ -45,7 +45,7 @@ job, because images may have crossed a network.
 `Backend` is a `Protocol` with one method. Three consequences:
 - `local` (diffusers, CPU/MPS) and `stub` (deterministic, offline) are
   interchangeable, so the **entire pipeline is testable without weights** — the
-  64-test suite runs in ~6 s with no network.
+  67-test suite runs in ~6 s with no network.
 - The notebook route is not a special case; it produces the same `JobResult`
   records and enters through `ingest`.
 - Adding a third backend is one class.
@@ -169,11 +169,11 @@ All figures below were read out of `evidence/*/metrics.json`,
 
 | Batch | Route | Model | Jobs | Pass | CLIPScore | Attribute accuracy | Diversity |
 |---|---|---|---|---|---|---|---|
-| `batch_a_local` | M1 MPS | sd15 | 6 | 6/6 | 28.83 | 0.580 | 0.565 |
-| `batch_a_sd15` | T4 | sd15 | 6 | 6/6 | 28.84 | 0.580 | 0.565 |
-| `batch_a_sdturbo` | T4 | sd-turbo | 6 | 6/6 | **31.15** | **0.673** | 0.661 |
-| `batch_b_sd15` | T4 | sd15 | 5 | 5/5 | 27.44 | 0.639 | 0.155 |
-| `batch_b_lcm` | T4 | sd15 + LCM-LoRA | 5 | 5/5 | 27.39 | 0.586 | 0.171 |
+| `batch_a_local` | M1 MPS | sd15 | 6 | 6/6 | 28.83 | 0.639 | 0.565 |
+| `batch_a_sd15` | T4 | sd15 | 6 | 6/6 | 28.84 | 0.639 | 0.565 |
+| `batch_a_sdturbo` | T4 | sd-turbo | 6 | 6/6 | **31.14** | **0.814** | 0.661 |
+| `batch_b_sd15` | T4 | sd15 | 5 | 5/5 | 27.44 | 0.667 | 0.155 |
+| `batch_b_lcm` | T4 | sd15 + LCM-LoRA | 5 | 5/5 | 27.39 | 0.667 | 0.171 |
 | `batch_c_edge` | T4 | sd15 | 1 | 0/1 | — | — | — |
 
 Job success rate is 23/24 across all batches. The single failure is deliberate:
@@ -218,40 +218,66 @@ attribute. Per-attribute probe hit rates:
 | age_band | 5/5 | 5/5 |
 | skin_tone | 5/5 | 5/5 |
 | hair_length | 5/5 | 5/5 |
+| presentation | 5/5 | 5/5 |
+| facial_hair | 5/5 | 5/5 |
 | attire | 5/5 | 4/5 |
-| eyewear | 1/1 | 0/1 |
-| background | 2/5 | 2/5 |
+| hair_colour | 4/5 | 2/5 |
+| hair_texture | 3/5 | 0/5 |
+| background | 2/5 | 3/5 |
+| eyewear | 1/5 | 4/5 |
 | pose | **0/5** | **0/5** |
-| expression | **0/5** | **0/5** |
+| expression | **0/5** | 2/5 |
 
 Identity consistency within the group: **0.845** mean pairwise DINOv2 cosine for
 sd15 (min 0.699), **0.829** for LCM (min 0.733) — the renders hold the same
 person while one attribute moves.
 
-**The `pose` and `expression` rows are the honest finding here.** Zero hits out of
-five, on both models, is not a model failure — it is a *metric* failure. CLIP
-ViT-B/32 at 384² cannot discriminate "front-facing headshot" from "three-quarter
-headshot", or "neutral expression" from "a slight closed-mouth smile"; the
-contrast phrases are too close in its text embedding space. The right reading is
-that the probe is valid for coarse attributes (age, skin tone, hair, attire) and
-uninformative for fine ones. Reporting a 0.580 mean adherence without saying that
-two of the eight attributes are being measured by a broken ruler would be
-misleading. Fixing it needs either a higher-resolution CLIP variant or a
-pose/landmark estimator, which is listed in §12.
+**The `pose` row is the honest finding here.** Zero hits out of five on both
+models is not a model failure — it is a *metric* failure. CLIP ViT-B/32 at 384²
+cannot discriminate "front-facing headshot" from "three-quarter headshot"; the
+contrast phrases sit too close in its text embedding space. `expression` is
+nearly as weak (0/5 and 2/5). The right reading is that the probe is valid for
+coarse attributes — age, skin tone, hair length, presentation, attire — and
+uninformative for fine ones. Reporting a mean adherence figure without saying
+that two of the twelve attributes are measured with a broken ruler would be
+misleading. Fixing it needs a higher-resolution CLIP variant or a pose/landmark
+estimator; see §12.
+
+**A second, self-inflicted metric bug was found while writing this section.**
+Reviewing a generated image against its spec by eye showed `a1` had been asked
+for a *feminine* presentation and had produced a visibly masculine portrait — yet
+the probe reported 6/7 attributes hit. The cause: `attribute_probes` only covered
+7 of the 11 attributes that reach the prompt. `presentation`, `hair_texture`,
+`hair_colour` and `facial_hair` were never measured, and an attribute that is
+never measured can never miss, so the reported adherence was structurally
+optimistic. All twelve attributes are now probed and
+`tests/test_prompt.py::test_every_requested_attribute_is_probed` fails if a new
+attribute is ever added to the prompt without a probe.
+
+The corrected figures happen to be *higher* (0.580 → 0.639 for sd15, 0.673 →
+0.814 for sd-turbo), because the newly-covered attributes score well. The number
+moving in a favourable direction is not the point — the earlier figure was not a
+measurement of what it claimed to measure. Note also that CLIP scored `a1`'s
+presentation as a hit where a human reviewer would not, which is exactly the
+disagreement `docs/HUMAN_REVIEW_PROTOCOL.md` step 4 exists to record.
 
 ### Model comparison
 
-sd-turbo scores highest on both adherence (31.15 vs 28.84) and diversity (0.661
-vs 0.565), and is ~5× faster (0.45 s vs 2.21 s per image). **It is also the one
+sd-turbo scores highest on both adherence (CLIPScore 31.14 vs 28.84, attribute
+accuracy 0.814 vs 0.639) and diversity (0.661 vs 0.565), and is ~5× faster
+(0.45 s vs 2.21 s per image). **It is also the one
 model here that cannot ship** — Stability AI Non-Commercial Research Community
 License. The commercially usable path is sd15, which costs quality and speed.
 That trade-off is the product decision, and it is why the licence status is
 carried in `configs/default.json` next to the weights rather than only in prose.
 
 LCM-LoRA cuts sd15 to 6 steps and is ~3× faster per image on the T4 (0.76 s vs
-2.21 s) at roughly equal CLIPScore (27.39 vs 27.44), but attribute accuracy drops
-(0.586 vs 0.639), concentrated in `attire` and `eyewear`. Few-step distillation
-is worth it for volume, not for fine attribute control.
+2.21 s) at effectively equal CLIPScore (27.39 vs 27.44) and equal mean attribute
+accuracy (0.667 both). The per-attribute breakdown is where they differ: LCM
+loses `hair_texture` entirely (0/5 vs 3/5) and half of `hair_colour` (2/5 vs 4/5)
+while gaining on `eyewear` (4/5 vs 1/5). Few-step distillation preserves coarse
+structure and degrades fine texture detail, which is the expected failure mode
+and is visible in the images.
 
 ## 8. Failures and what they taught
 

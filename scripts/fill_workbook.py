@@ -116,7 +116,7 @@ def main() -> int:
         25: ("Yes", f"evidence/ ({len(batches())} batches), EVIDENCE_INDEX.md"),
         26: ("Yes", "SOURCES.md - licence + commercial-use manifest per component"),
         27: ("Yes", "evidence/*/images (all attempts), held/ (refused), validation.json"),
-        28: ("Yes", "tests/ (65 tests), evidence/test_output.txt, evidence/*/benchmark.json"),
+        28: ("Yes", "tests/ (67 tests), evidence/test_output.txt, evidence/*/benchmark.json"),
         29: ("Yes", "docs/REPORT.md, SOURCES.md, AI_USE.md, demo video link in workbook"),
         30: ("Yes", "SOURCES.md 'Hosted execution environment'; zero spend, no card, no paid API"),
     }

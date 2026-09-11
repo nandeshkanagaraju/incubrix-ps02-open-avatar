@@ -34,24 +34,24 @@ repository; every number was read out of the file it is attributed to.
 
 | Claim | Evidence |
 |---|---|
-| `batch_a_local`: model `sd15` mean CLIPScore 28.834, attribute accuracy 0.5804 (n=6) | `evidence/batch_a_local/metrics.json` → `by_model.sd15` |
+| `batch_a_local`: model `sd15` mean CLIPScore 28.834, attribute accuracy 0.6389 (n=6) | `evidence/batch_a_local/metrics.json` → `by_model.sd15` |
 | `batch_a_local`: mean pairwise diversity distance 0.5647 | `evidence/batch_a_local/metrics.json` → `diversity` |
 | `batch_a_local`: covers 6 coverage contexts (east-asia-coverage, latin-america-coverage, mena-coverage, northern-europe-coverage, south-asia-coverage, west-africa-coverage) | `evidence/batch_a_local/metrics.json` → `coverage.region_context` |
 | `batch_a_local`: 6 spec(s) decided `ALLOW` | `evidence/batch_a_local/safety_log.jsonl` |
-| `batch_a_sd15`: model `sd15` mean CLIPScore 28.837, attribute accuracy 0.5804 (n=6) | `evidence/batch_a_sd15/metrics.json` → `by_model.sd15` |
+| `batch_a_sd15`: model `sd15` mean CLIPScore 28.837, attribute accuracy 0.6389 (n=6) | `evidence/batch_a_sd15/metrics.json` → `by_model.sd15` |
 | `batch_a_sd15`: mean pairwise diversity distance 0.5646 | `evidence/batch_a_sd15/metrics.json` → `diversity` |
 | `batch_a_sd15`: covers 6 coverage contexts (east-asia-coverage, latin-america-coverage, mena-coverage, northern-europe-coverage, south-asia-coverage, west-africa-coverage) | `evidence/batch_a_sd15/metrics.json` → `coverage.region_context` |
 | `batch_a_sd15`: 6 spec(s) decided `ALLOW` | `evidence/batch_a_sd15/safety_log.jsonl` |
-| `batch_a_sdturbo`: model `sdturbo` mean CLIPScore 31.145, attribute accuracy 0.6726 (n=6) | `evidence/batch_a_sdturbo/metrics.json` → `by_model.sdturbo` |
+| `batch_a_sdturbo`: model `sdturbo` mean CLIPScore 31.145, attribute accuracy 0.8139 (n=6) | `evidence/batch_a_sdturbo/metrics.json` → `by_model.sdturbo` |
 | `batch_a_sdturbo`: mean pairwise diversity distance 0.6612 | `evidence/batch_a_sdturbo/metrics.json` → `diversity` |
 | `batch_a_sdturbo`: covers 6 coverage contexts (east-asia-coverage, latin-america-coverage, mena-coverage, northern-europe-coverage, south-asia-coverage, west-africa-coverage) | `evidence/batch_a_sdturbo/metrics.json` → `coverage.region_context` |
 | `batch_a_sdturbo`: 6 spec(s) decided `ALLOW` | `evidence/batch_a_sdturbo/safety_log.jsonl` |
-| `batch_b_sd15`: model `sd15` mean CLIPScore 27.442, attribute accuracy 0.6393 (n=5) | `evidence/batch_b_sd15/metrics.json` → `by_model.sd15` |
+| `batch_b_sd15`: model `sd15` mean CLIPScore 27.442, attribute accuracy 0.6667 (n=5) | `evidence/batch_b_sd15/metrics.json` → `by_model.sd15` |
 | `batch_b_sd15`: identity `ctrl-subject` mean pairwise DINOv2 cosine 0.8449 | `evidence/batch_b_sd15/metrics.json` → `identity_consistency.ctrl-subject` |
 | `batch_b_sd15`: mean pairwise diversity distance 0.1551 | `evidence/batch_b_sd15/metrics.json` → `diversity` |
 | `batch_b_sd15`: covers 1 coverage contexts (unspecified) | `evidence/batch_b_sd15/metrics.json` → `coverage.region_context` |
 | `batch_b_sd15`: 5 spec(s) decided `ALLOW` | `evidence/batch_b_sd15/safety_log.jsonl` |
-| `batch_b_lcm`: model `sd15_lcm` mean CLIPScore 27.388, attribute accuracy 0.5857 (n=5) | `evidence/batch_b_lcm/metrics.json` → `by_model.sd15_lcm` |
+| `batch_b_lcm`: model `sd15_lcm` mean CLIPScore 27.388, attribute accuracy 0.6667 (n=5) | `evidence/batch_b_lcm/metrics.json` → `by_model.sd15_lcm` |
 | `batch_b_lcm`: identity `ctrl-subject` mean pairwise DINOv2 cosine 0.8292 | `evidence/batch_b_lcm/metrics.json` → `identity_consistency.ctrl-subject` |
 | `batch_b_lcm`: mean pairwise diversity distance 0.1708 | `evidence/batch_b_lcm/metrics.json` → `diversity` |
 | `batch_b_lcm`: covers 1 coverage contexts (unspecified) | `evidence/batch_b_lcm/metrics.json` → `coverage.region_context` |
