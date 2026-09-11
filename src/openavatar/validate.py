@@ -227,6 +227,8 @@ def build_manifest(bundle_dir: str | Path, cfg: Config) -> dict:
                 "compute_route": {
                     "backend": r.get("backend"),
                     "device": r.get("device"),
+                    "dtype": r.get("dtype"),
+                    "peak_accelerator_mb": r.get("peak_accelerator_mb"),
                     "runtime_sec": r.get("runtime_sec"),
                     "peak_rss_mb": r.get("peak_rss_mb"),
                 },

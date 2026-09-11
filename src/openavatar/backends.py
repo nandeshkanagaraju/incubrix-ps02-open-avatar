@@ -33,6 +33,7 @@ class JobResult:
     peak_rss_mb: float
     device: str
     backend: str
+    dtype: str | None = None
     error: str | None = None
 
     def to_dict(self) -> dict:
@@ -76,9 +77,13 @@ class LocalDiffusersBackend:
 
     name = "local"
 
-    def __init__(self, device: str = "auto", dtype: str = "float32"):
+    def __init__(self, device: str = "auto", dtype: str = "auto"):
         self.device = pick_device(device)
-        self.dtype = dtype
+        # float16 halves UNet residency (~3.4 GB -> ~1.7 GB), which is what makes
+        # this fit on an 8 GB M1 alongside the text encoder and activations.
+        # CPU float16 matmuls are not accelerated on this hardware, so CPU stays
+        # float32. The effective dtype is recorded on every JobResult.
+        self.dtype = ("float16" if self.device == "mps" else "float32") if dtype == "auto" else dtype
         self._cache: dict[tuple, object] = {}
 
     # -- pipeline construction -------------------------------------------
@@ -152,13 +157,14 @@ class LocalDiffusersBackend:
                 job_id=job.job_id, status="ok", image_path=str(target),
                 sha256=sha256_file(target), runtime_sec=round(dt, 3),
                 peak_rss_mb=round(_peak_rss_mb(), 1), device=self.device, backend=self.name,
+                dtype=self.dtype,
             )
         except Exception as exc:  # noqa: BLE001 - a failed job must not kill the batch
             return JobResult(
                 job_id=job.job_id, status="error", image_path=None, sha256=None,
                 runtime_sec=round(time.perf_counter() - t0, 3),
                 peak_rss_mb=round(_peak_rss_mb(), 1), device=self.device,
-                backend=self.name, error=f"{type(exc).__name__}: {exc}",
+                backend=self.name, dtype=self.dtype, error=f"{type(exc).__name__}: {exc}",
             )
 
 
