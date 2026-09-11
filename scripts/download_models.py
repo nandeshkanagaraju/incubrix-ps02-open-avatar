@@ -20,13 +20,16 @@ from openavatar.config import Config  # noqa: E402
 # reads - excluding them keeps the local footprint near 2 GB.
 SD_ALLOW = [
     "model_index.json",
-    "*/config.json", "*/*.json", "*/*.txt",
-    "text_encoder/model.safetensors",
-    "unet/diffusion_pytorch_model.safetensors",
-    "vae/diffusion_pytorch_model.safetensors",
-    "*.safetensors" ,
+    "scheduler/*.json",
+    "tokenizer/*",
+    "text_encoder/config.json", "text_encoder/model.safetensors",
+    "unet/config.json", "unet/diffusion_pytorch_model.safetensors",
+    "vae/config.json", "vae/diffusion_pytorch_model.safetensors",
+    # LoRA repos ship a single top-level weights file.
+    "*.safetensors",
 ]
-SD_IGNORE = ["*.ckpt", "*.bin", "*.pt", "*nonema*", "v1-5-pruned*", "*.msgpack", "*.onnx*"]
+SD_IGNORE = ["*.ckpt", "*.bin", "*.pt", "*nonema*", "v1-5-pruned*",
+              "*.msgpack", "*.onnx*", "safety_checker/*", "feature_extractor/*"]
 
 
 def main() -> int:
