@@ -8,8 +8,8 @@ OA=".venv/bin/openavatar"
 PY=".venv/bin/python"
 
 step() { printf '\n\033[1;36m════ %s ════\033[0m\n' "$1"; }
-say()  { printf '\033[0;33m  SAY: %s\033[0m\n' "$1"; }
-pause() { printf '\n\033[0;90m[Enter to continue]\033[0m'; read -r _ || true; }
+say()  { printf '\033[1;37m  • %s\033[0m\n' "$1"; }
+pause() { printf '\n\033[0;90m   ── press Enter ──\033[0m\n'; read -r _ || true; }
 
 # Demo specs: the committed ones at 384px/20 steps take ~50s each, which is dead
 # air on camera. These are the same specs at 256px/8 steps - same code path,
@@ -65,8 +65,16 @@ pause
 
 step "6. Live generation on this laptop"
 $OA render runs/demo_a --backend local --device mps 2>&1 | grep -E "ok in|failed"
-say "Real generation on an 8GB M1 with no GPU. 256 pixels and 8 steps to keep this short;"
-say "the committed evidence batches are 384 and 20 steps through the same code path."
+say "Real generation on an 8GB M1 with no GPU. 256px / 8 steps to keep this short;"
+say "the committed evidence batches are 384px / 20 steps through the same code path."
+NEW="runs/demo_a/images/a1_studio_portrait__sd15__s1001.png"
+REF="evidence/batch_a_sd15/images/a1_studio_portrait__sd15__s1001.png"
+$PY scripts/compare_image.py "$NEW" "$REF" /tmp/demo_compare.png \
+  --left-label "JUST GENERATED - this laptop, Apple M1 MPS, 256px/8 steps" \
+  --right-label "COMMITTED EVIDENCE - Kaggle Tesla T4, 384px/20 steps" \
+  --note "Same spec, same seed 1001, same pinned revision 451f4fe1. Cross-route DINOv2 cosine 0.9995." >/dev/null
+open /tmp/demo_compare.png
+say "Opening it next to the committed Kaggle render of the same spec and seed ->"
 pause
 
 step "7. Output validation and provenance"
@@ -79,7 +87,7 @@ say "It does not trust the executor's own report, because these images cross a n
 pause
 
 step "8. FAILURE AND RECOVERY (the real one)"
-echo "  -> open evidence/failures/fp16_mps_nan_black_output.png"
+open evidence/failures/fp16_mps_nan_black_output.png
 $PY -c "
 from PIL import Image,ImageStat;im=Image.open('evidence/failures/fp16_mps_nan_black_output.png').convert('RGB')
 print('  stddev:',[round(x,1) for x in ImageStat.Stat(im).stddev],'<- pure black')"
@@ -121,7 +129,17 @@ say "checkpoints the pipeline never loads. Real figure 4265 MB. RSS said 36 MB w
 say "holding a 4 GB model. Both fixed; a misleading benchmark is an eligibility gate."
 pause
 
-step "12. Results and the product call"
+step "12. The six baseline avatars"
+$PY scripts/contact_sheet.py evidence/batch_a_sd15 /tmp/demo_sheet.png \
+  --title "Baseline: 6 fictional avatars - neutral attributes, 6 coverage contexts, no nationality in any prompt" >/dev/null
+open /tmp/demo_sheet.png
+say "Six avatars spanning 6 skin tones, 4 age bands, 3 presentations, varied hair and attire."
+say "Each caption is the SPEC that produced it. No prompt contained a nationality."
+say "Visible misses too: a1 asked for feminine presentation and produced masculine."
+say "That is the miss my attribute probe was failing to measure - see the report."
+pause
+
+step "13. Results and the product call"
 $PY -c "
 import json
 rows=[('batch_a_local','M1 MPS'),('batch_a_sd15','Kaggle T4'),('batch_a_sdturbo','Kaggle T4'),('batch_b_sd15','Kaggle T4'),('batch_b_lcm','Kaggle T4')]
