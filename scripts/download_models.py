@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from huggingface_hub import snapshot_download  # noqa: E402
 
+from openavatar.backends import PIPELINE_WEIGHT_FILES  # noqa: E402
 from openavatar.config import Config  # noqa: E402
 
 # Diffusers reads the subfolder layout only. The SD 1.5 repo also ships
@@ -24,9 +25,8 @@ SD_ALLOW = [
     "scheduler/scheduler_config.json",
     "tokenizer/vocab.json", "tokenizer/merges.txt",
     "tokenizer/special_tokens_map.json", "tokenizer/tokenizer_config.json",
-    "text_encoder/config.json", "text_encoder/model.safetensors",
-    "unet/config.json", "unet/diffusion_pytorch_model.safetensors",
-    "vae/config.json", "vae/diffusion_pytorch_model.safetensors",
+    "text_encoder/config.json", "unet/config.json", "vae/config.json",
+    *PIPELINE_WEIGHT_FILES,   # canonical list, shared with bench.py
 ]
 SD_IGNORE = ["*.ckpt", "*.bin", "*.pt", "*.msgpack", "*.onnx*", "*.fp16.*",
              "*nonema*", "v1-5-pruned*", "safety_checker/*", "feature_extractor/*"]

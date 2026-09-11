@@ -1,0 +1,67 @@
+{
+  "batch_id": "batch_b_lcm",
+  "results": [
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_lcm/images/b0_base__sd15_lcm__s2001.png",
+      "job_id": "b0_base__sd15_lcm__s2001",
+      "peak_accelerator_mb": 2697.1,
+      "peak_rss_mb": null,
+      "runtime_sec": 30.83,
+      "sha256": "2e7cdd6e395baad84b8d0459e1a342feb82e626d2f0fc725094e21da282ddeb6",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_lcm/images/b1_var_age_band__sd15_lcm__s2001.png",
+      "job_id": "b1_var_age_band__sd15_lcm__s2001",
+      "peak_accelerator_mb": 2697.1,
+      "peak_rss_mb": null,
+      "runtime_sec": 0.747,
+      "sha256": "07fb8564b303cccc7509dd524fe21900594ba94d8ce5c2d4eedc8761cc4a3842",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_lcm/images/b2_var_attire__sd15_lcm__s2001.png",
+      "job_id": "b2_var_attire__sd15_lcm__s2001",
+      "peak_accelerator_mb": 2697.1,
+      "peak_rss_mb": null,
+      "runtime_sec": 0.75,
+      "sha256": "787ebdd19eb5cf69947688161c81ad7658abddda78c24128a9c57bb66c0d777c",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_lcm/images/b3_var_eyewear__sd15_lcm__s2001.png",
+      "job_id": "b3_var_eyewear__sd15_lcm__s2001",
+      "peak_accelerator_mb": 2697.1,
+      "peak_rss_mb": null,
+      "runtime_sec": 0.76,
+      "sha256": "aba4aeae1046d3e8fd751a6cf6b4411661397f7ee3ce4885eb4da88ddb6916d9",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_lcm/images/b4_var_background__sd15_lcm__s2001.png",
+      "job_id": "b4_var_background__sd15_lcm__s2001",
+      "peak_accelerator_mb": 2697.1,
+      "peak_rss_mb": null,
+      "runtime_sec": 0.768,
+      "sha256": "005fcaf3158ce26a231e88b350f7b751bfaa54dc2cfdc72401a96060aea3f87e",
+      "status": "ok"
+    }
+  ],
+  "route": "notebook",
+  "written_at": "2026-09-11T11:57:00.513895+00:00"
+}

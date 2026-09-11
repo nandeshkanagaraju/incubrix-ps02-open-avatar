@@ -1,0 +1,31 @@
+{
+  "appearance": {
+    "age_band": "adult",
+    "attire": "collared-shirt",
+    "expression": "neutral",
+    "eyewear": "thick-frame-glasses",
+    "facial_hair": "none",
+    "hair_colour": "dark-brown",
+    "hair_length": "shoulder-length",
+    "hair_texture": "wavy",
+    "presentation": "feminine",
+    "skin_tone": "mst-6"
+  },
+  "identity_id": "ctrl-subject",
+  "intent": "fictional",
+  "notes": "single-attribute change: appearance.eyewear -> thick-frame-glasses",
+  "region_context": null,
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 2001,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "neutral-grey-studio",
+    "pose": "front-facing-headshot"
+  },
+  "spec_id": "b3_var_eyewear"
+}

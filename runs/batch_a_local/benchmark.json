@@ -1,0 +1,79 @@
+{
+  "batch_id": "batch_a_sd15",
+  "benchmarked_at": "2026-09-11T13:12:32.205476+00:00",
+  "current_process_rss_mb": 104.3,
+  "machine": {
+    "accelerator_note": "no CUDA device on this host; peak accelerator memory is not measurable locally",
+    "accelerator_peak_memory_mb": null,
+    "backend": "local",
+    "cpu_count": 8,
+    "device": "mps",
+    "machine": "arm64",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "ram_total_mb": 8590
+  },
+  "memory_note": "peak_process_rss_mb is the high-water mark from getrusage and is the number to quote: it captures the CPU-side peak while weights are loaded and cast. current_process_rss_mb is much lower on Apple MPS because the weights are then handed to Metal and live in unified memory that is not attributed to process RSS. Neither number is a GPU-memory measurement; peak accelerator memory is only available on the CUDA route and is recorded per job as peak_accelerator_mb in results.json.",
+  "method": {
+    "cache": "pipeline cached across jobs; image resume disabled during benchmark",
+    "memory_measure": "process peak RSS via getrusage + psutil RSS snapshot",
+    "repetitions_per_job": 3,
+    "seeds": "fixed per job; identical across repetitions",
+    "timing_boundary": "backend.run() only; weight load excluded and reported as pipeline_load_sec",
+    "warmup_runs_per_job": 1
+  },
+  "models": {
+    "sd15": {
+      "repo_id": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+      "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+      "size_mb": 4265.1
+    }
+  },
+  "peak_process_rss_mb": 1662.8,
+  "per_job": [
+    {
+      "job_id": "a1_studio_portrait__sd15__s1001",
+      "mean_sec": 18.356,
+      "median_sec": 18.435,
+      "model_key": "sd15",
+      "peak_rss_mb": 1662.8,
+      "repetitions": 3,
+      "samples_sec": [
+        18.18,
+        18.452,
+        18.435
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "stdev_sec": 0.152,
+      "steps": 20
+    },
+    {
+      "job_id": "a2_studio_portrait__sd15__s1002",
+      "mean_sec": 18.649,
+      "median_sec": 18.625,
+      "model_key": "sd15",
+      "peak_rss_mb": 1662.8,
+      "repetitions": 3,
+      "samples_sec": [
+        18.516,
+        18.625,
+        18.806
+      ],
+      "size": [
+        384,
+        384
+      ],
+      "stdev_sec": 0.146,
+      "steps": 20
+    }
+  ],
+  "pipeline_load_sec": 15.25,
+  "summary": {
+    "fastest_sec": 18.435,
+    "jobs_timed": 2,
+    "median_time_per_image_sec": 18.53,
+    "slowest_sec": 18.625
+  }
+}

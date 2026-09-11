@@ -3,9 +3,15 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
+.DS_Store
+
+# Working run directories are reproducible from specs; evidence/ is the
+# committed record. Images under runs/ would duplicate evidence/ 1:1.
 runs/**/images/
 runs/**/bench/
 runs/**/_ingest_staging/
+submission/results_all/
+submission/bundles/
+
+# Never commit an identifiable person's reference images.
 consent/reference_images/
-!evidence/**
-.DS_Store

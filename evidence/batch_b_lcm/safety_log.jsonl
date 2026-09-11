@@ -1,0 +1,5 @@
+{"checked_at": "2026-09-11T11:32:26.219290+00:00", "consent_id": null, "decision": "ALLOW", "findings": [], "negative_prompt_groups": ["identity_exclusion", "minor_exclusion", "quality", "safety"], "spec_id": "b0_base"}
+{"checked_at": "2026-09-11T11:32:26.220214+00:00", "consent_id": null, "decision": "ALLOW", "findings": [], "negative_prompt_groups": ["identity_exclusion", "minor_exclusion", "quality", "safety"], "spec_id": "b1_var_age_band"}
+{"checked_at": "2026-09-11T11:32:26.220568+00:00", "consent_id": null, "decision": "ALLOW", "findings": [], "negative_prompt_groups": ["identity_exclusion", "minor_exclusion", "quality", "safety"], "spec_id": "b2_var_attire"}
+{"checked_at": "2026-09-11T11:32:26.220885+00:00", "consent_id": null, "decision": "ALLOW", "findings": [], "negative_prompt_groups": ["identity_exclusion", "minor_exclusion", "quality", "safety"], "spec_id": "b3_var_eyewear"}
+{"checked_at": "2026-09-11T11:32:26.221199+00:00", "consent_id": null, "decision": "ALLOW", "findings": [], "negative_prompt_groups": ["identity_exclusion", "minor_exclusion", "quality", "safety"], "spec_id": "b4_var_background"}

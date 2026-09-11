@@ -14,7 +14,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .backends import get_backend
+from .backends import PIPELINE_WEIGHT_FILES, get_backend
 from .config import Config
 from .jobs import Bundle
 from .logging_utils import get_logger
@@ -23,18 +23,58 @@ log = get_logger(__name__)
 
 
 def _model_size_mb(repo_id: str, revision: str) -> float | None:
+    """Size of the weights the pipeline actually loads - not the whole repo.
+
+    Summing every *.safetensors in the SD 1.5 repo reports ~23.6 GB, which is
+    wrong by more than 5x: it counts the single-file checkpoints, the non-EMA
+    UNet, fp16 duplicates of every shard and the disabled safety checker. Only
+    the files in PIPELINE_WEIGHT_FILES are read.
+
+    The local snapshot is measured first, so the reported number is the weight
+    set actually resident on the benchmarked machine and the benchmark still
+    works offline. The Hub is only consulted as a fallback.
+    """
+    local = _local_snapshot_size_mb(repo_id, revision)
+    if local is not None:
+        return local
     try:
         from huggingface_hub import HfApi
 
         info = HfApi().model_info(repo_id, revision=revision, files_metadata=True)
-        total = sum(
-            s.size or 0 for s in info.siblings
-            if s.rfilename.endswith(".safetensors") and "nonema" not in s.rfilename
-        )
+        by_name = {s.rfilename: (s.size or 0) for s in info.siblings}
+        total = sum(by_name.get(f, 0) for f in PIPELINE_WEIGHT_FILES)
+        if not total:
+            # LoRA and other single-file repos do not use the subfolder layout.
+            total = sum(
+                size for name, size in by_name.items()
+                if name.endswith(".safetensors") and "/" not in name
+            )
         return round(total / 1e6, 1) if total else None
     except Exception as exc:  # noqa: BLE001 - offline benchmarking must still work
         log.warning("could not resolve model size for %s: %s", repo_id, exc)
         return None
+
+
+def _local_snapshot_size_mb(repo_id: str, revision: str) -> float | None:
+    """Measure the cached snapshot on this machine, following symlinks."""
+    try:
+        from huggingface_hub import snapshot_download
+
+        snap = Path(snapshot_download(repo_id=repo_id, revision=revision,
+                                      local_files_only=True))
+    except Exception:  # noqa: BLE001 - not cached, or hub unavailable
+        return None
+
+    total = 0
+    for name in PIPELINE_WEIGHT_FILES:
+        f = snap / name
+        if f.exists():
+            total += f.stat().st_size
+    if not total:
+        # single-file repo layout (LoRA)
+        for f in snap.glob("*.safetensors"):
+            total += f.stat().st_size
+    return round(total / 1e6, 1) if total else None
 
 
 def run_benchmark(
@@ -65,18 +105,22 @@ def run_benchmark(
     load_sec = round(time.perf_counter() - t_load0, 3)
 
     per_job = []
+    per_job_rss = []
     for job in jobs:
         for _ in range(warmup):
             backend.run(job, bench_dir)
         samples = []
+        rss_samples = []
         for r in range(repetitions):
             res = backend.run(job, bench_dir)
             if res.status != "ok":
                 log.error("benchmark job %s failed: %s", job.job_id, res.error)
                 continue
             samples.append(res.runtime_sec)
+            rss_samples.append(res.peak_rss_mb)
             log.info("bench %s rep %d/%d: %.2fs", job.job_id, r + 1, repetitions, res.runtime_sec)
         if samples:
+            per_job_rss.append({"peak_rss_mb": max(rss_samples)})
             per_job.append({
                 "job_id": job.job_id,
                 "model_key": job.model_key,
@@ -87,10 +131,12 @@ def run_benchmark(
                 "median_sec": round(statistics.median(samples), 3),
                 "mean_sec": round(statistics.fmean(samples), 3),
                 "stdev_sec": round(statistics.stdev(samples), 3) if len(samples) > 1 else 0.0,
+                "peak_rss_mb": max(rss_samples),
             })
 
     medians = [j["median_sec"] for j in per_job]
     proc = psutil.Process()
+    peak_rss = max((j["peak_rss_mb"] for j in per_job_rss), default=None)
     models = {}
     for job in jobs:
         if job.model_key not in models:
@@ -122,7 +168,17 @@ def run_benchmark(
             "accelerator_note": "no CUDA device on this host; peak accelerator memory is not measurable locally",
         },
         "pipeline_load_sec": load_sec,
-        "process_rss_mb": round(proc.memory_info().rss / 1e6, 1),
+        "peak_process_rss_mb": peak_rss,
+        "current_process_rss_mb": round(proc.memory_info().rss / 1e6, 1),
+        "memory_note": (
+            "peak_process_rss_mb is the high-water mark from getrusage and is the "
+            "number to quote: it captures the CPU-side peak while weights are loaded "
+            "and cast. current_process_rss_mb is much lower on Apple MPS because the "
+            "weights are then handed to Metal and live in unified memory that is not "
+            "attributed to process RSS. Neither number is a GPU-memory measurement; "
+            "peak accelerator memory is only available on the CUDA route and is "
+            "recorded per job as peak_accelerator_mb in results.json."
+        ),
         "models": models,
         "per_job": per_job,
         "summary": {

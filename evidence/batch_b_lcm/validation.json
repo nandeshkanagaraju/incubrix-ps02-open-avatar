@@ -1,0 +1,75 @@
+{
+  "batch_id": "batch_b_lcm",
+  "failed": 0,
+  "items": [
+    {
+      "codes": [],
+      "details": {
+        "bytes": 169953,
+        "height": 384,
+        "path": "runs/batch_b_lcm/images/b0_base__sd15_lcm__s2001.png",
+        "pixel_stddev": 75.717,
+        "sha256": "2e7cdd6e395baad84b8d0459e1a342feb82e626d2f0fc725094e21da282ddeb6",
+        "width": 384
+      },
+      "job_id": "b0_base__sd15_lcm__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 173515,
+        "height": 384,
+        "path": "runs/batch_b_lcm/images/b1_var_age_band__sd15_lcm__s2001.png",
+        "pixel_stddev": 68.956,
+        "sha256": "07fb8564b303cccc7509dd524fe21900594ba94d8ce5c2d4eedc8761cc4a3842",
+        "width": 384
+      },
+      "job_id": "b1_var_age_band__sd15_lcm__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 175618,
+        "height": 384,
+        "path": "runs/batch_b_lcm/images/b2_var_attire__sd15_lcm__s2001.png",
+        "pixel_stddev": 68.124,
+        "sha256": "787ebdd19eb5cf69947688161c81ad7658abddda78c24128a9c57bb66c0d777c",
+        "width": 384
+      },
+      "job_id": "b2_var_attire__sd15_lcm__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 171496,
+        "height": 384,
+        "path": "runs/batch_b_lcm/images/b3_var_eyewear__sd15_lcm__s2001.png",
+        "pixel_stddev": 77.498,
+        "sha256": "aba4aeae1046d3e8fd751a6cf6b4411661397f7ee3ce4885eb4da88ddb6916d9",
+        "width": 384
+      },
+      "job_id": "b3_var_eyewear__sd15_lcm__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 179705,
+        "height": 384,
+        "path": "runs/batch_b_lcm/images/b4_var_background__sd15_lcm__s2001.png",
+        "pixel_stddev": 73.451,
+        "sha256": "005fcaf3158ce26a231e88b350f7b751bfaa54dc2cfdc72401a96060aea3f87e",
+        "width": 384
+      },
+      "job_id": "b4_var_background__sd15_lcm__s2001",
+      "ok": true
+    }
+  ],
+  "passed": 5,
+  "success_rate": 1.0,
+  "total_jobs": 5,
+  "validated_at": "2026-09-11T11:57:50.736310+00:00"
+}

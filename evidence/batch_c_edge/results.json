@@ -1,0 +1,19 @@
+{
+  "batch_id": "batch_c_edge",
+  "results": [
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_c_edge/images/c3_valid_control__sd15__s3003.png",
+      "job_id": "c3_valid_control__sd15__s3003",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.245,
+      "sha256": "0b86b57178152a5b2f4697739457b3f787cb799b4d1dbbcba615d248d2da159e",
+      "status": "ok"
+    }
+  ],
+  "route": "notebook",
+  "written_at": "2026-09-11T11:57:00.849655+00:00"
+}

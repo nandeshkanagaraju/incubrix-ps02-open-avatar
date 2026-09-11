@@ -1,0 +1,75 @@
+{
+  "batch_id": "batch_b_sd15",
+  "failed": 0,
+  "items": [
+    {
+      "codes": [],
+      "details": {
+        "bytes": 197866,
+        "height": 384,
+        "path": "runs/batch_b_sd15/images/b0_base__sd15__s2001.png",
+        "pixel_stddev": 59.936,
+        "sha256": "a4bd3ca1713f3e750f1287360fce6134fcd245df86670a0ddd90e014a9b0b2ff",
+        "width": 384
+      },
+      "job_id": "b0_base__sd15__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 201030,
+        "height": 384,
+        "path": "runs/batch_b_sd15/images/b1_var_age_band__sd15__s2001.png",
+        "pixel_stddev": 60.37,
+        "sha256": "af034622856f12758dc251789fe877e0bff525ab3a2e14bbb2076dad30bd7748",
+        "width": 384
+      },
+      "job_id": "b1_var_age_band__sd15__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 202936,
+        "height": 384,
+        "path": "runs/batch_b_sd15/images/b2_var_attire__sd15__s2001.png",
+        "pixel_stddev": 57.28,
+        "sha256": "294b192340f9e4eb3e2bcd23ec5be11508f6c0b85b441bfe6c1a5133e9e59ca5",
+        "width": 384
+      },
+      "job_id": "b2_var_attire__sd15__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 202924,
+        "height": 384,
+        "path": "runs/batch_b_sd15/images/b3_var_eyewear__sd15__s2001.png",
+        "pixel_stddev": 61.907,
+        "sha256": "fde2752ecb117ffd7c4e240ca66136b6b10a7baf8850db209954e71d9a1cffd7",
+        "width": 384
+      },
+      "job_id": "b3_var_eyewear__sd15__s2001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 202540,
+        "height": 384,
+        "path": "runs/batch_b_sd15/images/b4_var_background__sd15__s2001.png",
+        "pixel_stddev": 58.446,
+        "sha256": "de377e0da6999e5d2d24a67010bb5583383bb1f2735f508fe1f03aa773eb8795",
+        "width": 384
+      },
+      "job_id": "b4_var_background__sd15__s2001",
+      "ok": true
+    }
+  ],
+  "passed": 5,
+  "success_rate": 1.0,
+  "total_jobs": 5,
+  "validated_at": "2026-09-11T11:57:57.328071+00:00"
+}

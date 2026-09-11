@@ -1,0 +1,85 @@
+{
+  "batch_id": "batch_a_sd15",
+  "results": [
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a1_studio_portrait__sd15__s1001.png",
+      "job_id": "a1_studio_portrait__sd15__s1001",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 36.097,
+      "sha256": "0cee780fdfbe830d63be5934c6be148d3297a7be1ff7e53813bdcf62eef63a83",
+      "status": "ok"
+    },
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a2_studio_portrait__sd15__s1002.png",
+      "job_id": "a2_studio_portrait__sd15__s1002",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 28.036,
+      "sha256": "8c51dfbfc5718283d1cb5ed9b0c59e02cc2e2b6d860c084d5e5b6e40a8c65143",
+      "status": "ok"
+    },
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a3_studio_portrait__sd15__s1003.png",
+      "job_id": "a3_studio_portrait__sd15__s1003",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 18.587,
+      "sha256": "114fe4d8818890669b14d5d641b95b7283660d490452e15c1fe19b89f70eadc7",
+      "status": "ok"
+    },
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a4_studio_portrait__sd15__s1004.png",
+      "job_id": "a4_studio_portrait__sd15__s1004",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 18.799,
+      "sha256": "e31577bd35dcf49479f99b6ce0e1d334677c767089ccd18d7661f2bd4446e452",
+      "status": "ok"
+    },
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a5_studio_portrait__sd15__s1005.png",
+      "job_id": "a5_studio_portrait__sd15__s1005",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 18.982,
+      "sha256": "27f5310f15caa4c23ccc6c9a68d9bd00062d457494fbeedfcb4ea749958e00a4",
+      "status": "ok"
+    },
+    {
+      "attention_slicing": false,
+      "backend": "local",
+      "device": "mps",
+      "dtype": "float16",
+      "error": null,
+      "image_path": "runs/batch_a_sd15/images/a6_studio_portrait__sd15__s1006.png",
+      "job_id": "a6_studio_portrait__sd15__s1006",
+      "peak_rss_mb": 2099.1,
+      "runtime_sec": 18.712,
+      "sha256": "6cd16536be35c8b6240fad6dd8d1ede6d86fe407ad690ce14c05e6dd590526d9",
+      "status": "ok"
+    }
+  ],
+  "route": "local",
+  "written_at": "2026-09-11T11:56:40.875292+00:00"
+}

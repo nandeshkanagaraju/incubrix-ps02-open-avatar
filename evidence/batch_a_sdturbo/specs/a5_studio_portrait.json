@@ -1,0 +1,28 @@
+{
+  "appearance": {
+    "age_band": "adult",
+    "attire": "high-visibility-jacket",
+    "expression": "smiling",
+    "hair_colour": "dark-brown",
+    "hair_length": "long",
+    "hair_texture": "curly",
+    "presentation": "androgynous",
+    "skin_tone": "mst-6"
+  },
+  "identity_id": null,
+  "intent": "fictional",
+  "region_context": "latin-america-coverage",
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 1005,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "outdoor-daylight-bokeh",
+    "pose": "shoulders-up-relaxed"
+  },
+  "spec_id": "a5_studio_portrait"
+}

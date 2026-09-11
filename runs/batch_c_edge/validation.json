@@ -1,0 +1,22 @@
+{
+  "batch_id": "batch_c_edge",
+  "failed": 1,
+  "items": [
+    {
+      "codes": [
+        "TRUNCATED_IMAGE"
+      ],
+      "details": {
+        "bytes": 130015,
+        "decode_error": "Truncated File Read",
+        "path": "runs/batch_c_edge/images/c3_valid_control__sd15__s3003.png"
+      },
+      "job_id": "c3_valid_control__sd15__s3003",
+      "ok": false
+    }
+  ],
+  "passed": 0,
+  "success_rate": 0.0,
+  "total_jobs": 1,
+  "validated_at": "2026-09-11T11:58:04.033699+00:00"
+}

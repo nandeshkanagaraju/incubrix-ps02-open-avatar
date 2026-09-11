@@ -27,13 +27,44 @@ ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "evidence"
 
 
+def put(ws, row: int, col: int, value):
+    """Write a cell, redirecting merged cells to their anchor.
+
+    The workbook merges many of the candidate-input cells; openpyxl raises on a
+    write to any member of a merged range other than its top-left anchor.
+    """
+    from openpyxl.utils import get_column_letter
+
+    coord = f"{get_column_letter(col)}{row}"
+    for rng in ws.merged_cells.ranges:
+        if coord in rng:
+            ws.cell(row=rng.min_row, column=rng.min_col, value=value)
+            return
+    ws.cell(row=row, column=col, value=value)
+
+
+def puta(ws, coord: str, value):
+    """Same as put(), addressed by A1-style coordinate."""
+    from openpyxl.utils.cell import coordinate_from_string, column_index_from_string
+
+    col_letter, row = coordinate_from_string(coord)
+    put(ws, row, column_index_from_string(col_letter), value)
+
+
 def load(batch: str, name: str):
     p = EVIDENCE / batch / name
     return json.loads(p.read_text()) if p.exists() else None
 
 
 def batches() -> list[str]:
-    return sorted(d.name for d in EVIDENCE.iterdir() if d.is_dir()) if EVIDENCE.exists() else []
+    """Evidence subdirectories that are actual batches.
+
+    evidence/ also holds failures/ and loose artefacts, which have no
+    validation.json and must not be listed as batches."""
+    if not EVIDENCE.exists():
+        return []
+    return sorted(d.name for d in EVIDENCE.iterdir()
+                  if d.is_dir() and (d / "validation.json").exists())
 
 
 def safety_counts(batch: str) -> dict:
@@ -63,21 +94,21 @@ def main() -> int:
 
     # ---- 00_START -------------------------------------------------------
     s = wb["00_START"]
-    s["B5"] = args.candidate_id
-    s["B6"] = args.candidate_name
-    s["F6"] = args.candidate_email
-    s["B7"] = today
-    s["F7"] = args.repo_url
-    s["B8"] = f"{platform.processor() or 'Apple M1'} / {psutil.cpu_count(logical=True)} logical cores"
-    s["F8"] = round(psutil.virtual_memory().total / 1e9, 1)
-    s["B9"] = platform.platform()
-    s["F9"] = f"Python {platform.python_version()}"
-    s["B10"] = args.free_compute
-    s["F10"] = "Kaggle Notebooks (free GPU tier) + local Apple M1 MPS"
-    s["B11"] = args.report_url
-    s["F11"] = "Claude Code (Claude Opus 5) - fully disclosed in AI_USE.md"
-    s["A34"] = args.candidate_name
-    s["E34"] = today
+    puta(s, "B5", args.candidate_id)
+    puta(s, "B6", args.candidate_name)
+    puta(s, "F6", args.candidate_email)
+    puta(s, "B7", today)
+    puta(s, "F7", args.repo_url)
+    puta(s, "B8", f"{platform.processor() or 'Apple M1'} / {psutil.cpu_count(logical=True)} logical cores")
+    puta(s, "F8", round(psutil.virtual_memory().total / 1e9, 1))
+    puta(s, "B9", platform.platform())
+    puta(s, "F9", f"Python {platform.python_version()}")
+    puta(s, "B10", args.free_compute)
+    puta(s, "F10", "Kaggle Notebooks (free GPU tier) + local Apple M1 MPS")
+    puta(s, "B11", args.report_url)
+    puta(s, "F11", "Claude Code (Claude Opus 5) - fully disclosed in AI_USE.md")
+    puta(s, "A34", args.candidate_name)
+    puta(s, "E34", today)
 
     checklist = {
         23: ("Yes", "Repository root; README.md documents the clean setup path"),
@@ -90,8 +121,8 @@ def main() -> int:
         30: ("Yes", "SOURCES.md 'Hosted execution environment'; zero spend, no card, no paid API"),
     }
     for row, (status, note) in checklist.items():
-        s.cell(row=row, column=6, value=status)
-        s.cell(row=row, column=7, value=note)
+        put(s, row, 6, status)
+        put(s, row, 7, note)
 
     # ---- 01_DELIVERABLES ------------------------------------------------
     d = wb["01_DELIVERABLES"]
@@ -108,9 +139,9 @@ def main() -> int:
         13: ("See notes", "", "Unedited demo video - link to be added by candidate"),
     }
     for row, (status, path, note) in deliverables.items():
-        d.cell(row=row, column=3, value=status)
-        d.cell(row=row, column=4, value=path)
-        d.cell(row=row, column=5, value=note)
+        put(d, row, 3, status)
+        put(d, row, 4, path)
+        put(d, row, 5, note)
 
     cmds = {
         16: "python3.11 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && pip install -e .",
@@ -122,13 +153,13 @@ def main() -> int:
         22: "openavatar validate runs/batch_a_local && openavatar evaluate runs/batch_a_local",
     }
     for row, cmd in cmds.items():
-        d.cell(row=row, column=4, value=cmd)
-    d.cell(row=25, column=1, value=(
+        put(d, row, 4, cmd)
+    put(d, 25, 1,
         "Hybrid execution as required: all orchestration, safety screening, validation, provenance, "
         "evaluation, benchmarking and tests run locally on an 8 GB Apple M1 (no discrete GPU). "
         "Image-model inference runs locally on MPS and, for the notebook-evidence route, on Kaggle's "
         "free GPU tier. No payment, card, subscription or commercial generation API was used. "
-        "Google Colab was deliberately not used (managed-runtime terms prohibit deepfake creation)."))
+        "Google Colab was deliberately not used (managed-runtime terms prohibit deepfake creation).")
 
     # ---- 02_COMPONENTS --------------------------------------------------
     c = wb["02_COMPONENTS"]
@@ -170,9 +201,8 @@ def main() -> int:
                  "Permitted", "local", "Yes", "", "Used as an id vocabulary only; no ethnic labelling", today])
     for i, r in enumerate(rows, start=5):
         for j, v in enumerate(r, start=1):
-            c.cell(row=i, column=j, value=v)
-    c.cell(row=26 + len(rows) - len(rows), column=1)  # keep the guidance row intact
-    c["A26"] = (
+            put(c, i, j, v)
+    puta(c, "A26",
         "Product recommendation: ship sd15 + sd15_lcm (CreativeML OpenRAIL-M / openrail++, commercial use "
         "permitted subject to use restrictions that safety.py enforces in code). sdturbo is Stability AI "
         "Non-Commercial and must NOT ship - it is present only as the second-model comparison. CLIP (MIT) and "
@@ -197,43 +227,43 @@ def main() -> int:
             r = results.get(item["job_id"], {})
             per = (met_j or {}).get("per_image", {}).get(item["job_id"], {})
             det = item.get("details", {})
-            t.cell(row=row, column=1, value=item["job_id"])
-            t.cell(row=row, column=2, value="Baseline" if batch.startswith("batch_a") else
-                   ("Strong" if batch.startswith("batch_b") else "Edge case"))
-            t.cell(row=row, column=3, value=f"evidence/{batch}/specs/")
-            t.cell(row=row, column=4, value="Valid PNG at requested size with complete provenance")
-            t.cell(row=row, column=5, value=f"evidence/{batch}/images/")
-            t.cell(row=row, column=6, value=f"{per.get('model_key','')} dtype={r.get('dtype','')}")
-            t.cell(row=row, column=7, value=f"{r.get('backend','')}/{r.get('device','')}")
-            t.cell(row=row, column=8, value="Pass" if item["ok"] else "Fail")
-            t.cell(row=row, column=9, value="CLIPScore")
-            t.cell(row=row, column=10, value=per.get("clip_score"))
-            t.cell(row=row, column=11, value="attribute_accuracy")
-            t.cell(row=row, column=12, value=per.get("attribute_accuracy"))
-            t.cell(row=row, column=13, value=r.get("runtime_sec"))
-            t.cell(row=row, column=14, value=r.get("peak_rss_mb"))
-            t.cell(row=row, column=15, value=(ben or {}).get("models", {}).get(
+            put(t, row, 1, item["job_id"])
+            put(t, row, 2, "Baseline" if batch.startswith("batch_a") else
+                ("Strong" if batch.startswith("batch_b") else "Edge case"))
+            put(t, row, 3, f"evidence/{batch}/specs/")
+            put(t, row, 4, "Valid PNG at requested size with complete provenance")
+            put(t, row, 5, f"evidence/{batch}/images/")
+            put(t, row, 6, f"{per.get('model_key','')} dtype={r.get('dtype','')}")
+            put(t, row, 7, f"{r.get('backend','')}/{r.get('device','')}")
+            put(t, row, 8, "Pass" if item["ok"] else "Fail")
+            put(t, row, 9, "CLIPScore")
+            put(t, row, 10, per.get("clip_score"))
+            put(t, row, 11, "attribute_accuracy")
+            put(t, row, 12, per.get("attribute_accuracy"))
+            put(t, row, 13, r.get("runtime_sec"))
+            put(t, row, 14, r.get("peak_rss_mb"))
+            put(t, row, 15, (ben or {}).get("models", {}).get(
                 per.get("model_key", ""), {}).get("size_mb"))
-            t.cell(row=row, column=16, value=f"evidence/{batch}/validation.json")
-            t.cell(row=row, column=17, value=", ".join(item.get("codes", [])) or
-                   f"stddev={det.get('pixel_stddev')}")
+            put(t, row, 16, f"evidence/{batch}/validation.json")
+            put(t, row, 17, ", ".join(item.get("codes", [])) or
+                f"stddev={det.get('pixel_stddev')}")
             row += 1
         for held in (load(batch, "bundle.json") or {}).get("held", []):
-            t.cell(row=row, column=1, value=held["spec_id"])
-            t.cell(row=row, column=2, value="Edge case")
-            t.cell(row=row, column=3, value=f"evidence/{batch}/held/{held['spec_id']}.json")
-            t.cell(row=row, column=4, value=f"Expect {held['decision']}")
-            t.cell(row=row, column=5, value="no output - correctly not executed")
-            t.cell(row=row, column=7, value="n/a - blocked before compute")
-            t.cell(row=row, column=8, value="Pass")
-            t.cell(row=row, column=16, value=f"evidence/{batch}/safety_log.jsonl")
-            t.cell(row=row, column=17, value=f"{held['decision']}: {', '.join(held['codes'])}")
+            put(t, row, 1, held["spec_id"])
+            put(t, row, 2, "Edge case")
+            put(t, row, 3, f"evidence/{batch}/held/{held['spec_id']}.json")
+            put(t, row, 4, f"Expect {held['decision']}")
+            put(t, row, 5, "no output - correctly not executed")
+            put(t, row, 7, "n/a - blocked before compute")
+            put(t, row, 8, "Pass")
+            put(t, row, 16, f"evidence/{batch}/safety_log.jsonl")
+            put(t, row, 17, f"{held['decision']}: {', '.join(held['codes'])}")
             row += 1
 
     ben_any = next((load(b, "benchmark.json") for b in batches() if load(b, "benchmark.json")), None)
     if ben_any:
         m = ben_any["method"]
-        t["A28"] = (
+        puta(t, "A28",
             f"Benchmark method: timing boundary = {m['timing_boundary']}. "
             f"Warm-up {m['warmup_runs_per_job']} run(s) per job, {m['repetitions_per_job']} timed repetitions, "
             f"median reported. Memory: {m['memory_measure']}. Seeds: {m['seeds']}. Cache: {m['cache']}. "

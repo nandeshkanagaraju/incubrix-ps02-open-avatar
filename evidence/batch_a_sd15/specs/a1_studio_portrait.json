@@ -1,0 +1,28 @@
+{
+  "appearance": {
+    "age_band": "adult",
+    "attire": "business-blazer",
+    "expression": "slight-smile",
+    "hair_colour": "black",
+    "hair_length": "short",
+    "hair_texture": "coily",
+    "presentation": "feminine",
+    "skin_tone": "mst-9"
+  },
+  "identity_id": null,
+  "intent": "fictional",
+  "region_context": "west-africa-coverage",
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 1001,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "neutral-grey-studio",
+    "pose": "front-facing-headshot"
+  },
+  "spec_id": "a1_studio_portrait"
+}

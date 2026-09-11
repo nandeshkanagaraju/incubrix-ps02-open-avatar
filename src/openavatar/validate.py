@@ -231,6 +231,7 @@ def build_manifest(bundle_dir: str | Path, cfg: Config) -> dict:
                     "backend": r.get("backend"),
                     "device": r.get("device"),
                     "dtype": r.get("dtype"),
+                    "attention_slicing": r.get("attention_slicing"),
                     "peak_accelerator_mb": r.get("peak_accelerator_mb"),
                     "runtime_sec": r.get("runtime_sec"),
                     "peak_rss_mb": r.get("peak_rss_mb"),

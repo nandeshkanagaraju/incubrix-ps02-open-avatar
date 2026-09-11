@@ -1,0 +1,29 @@
+{
+  "appearance": {
+    "age_band": "senior",
+    "attire": "lab-coat",
+    "expression": "neutral",
+    "facial_hair": "full-beard",
+    "hair_colour": "grey",
+    "hair_length": "short",
+    "hair_texture": "straight",
+    "presentation": "masculine",
+    "skin_tone": "mst-2"
+  },
+  "identity_id": null,
+  "intent": "fictional",
+  "region_context": "northern-europe-coverage",
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 1004,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "soft-white-studio",
+    "pose": "front-facing-headshot"
+  },
+  "spec_id": "a4_studio_portrait"
+}

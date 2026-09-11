@@ -1,0 +1,29 @@
+{
+  "appearance": {
+    "age_band": "young-adult",
+    "attire": "collared-shirt",
+    "expression": "neutral",
+    "facial_hair": "short-beard",
+    "hair_colour": "black",
+    "hair_length": "short",
+    "hair_texture": "wavy",
+    "presentation": "masculine",
+    "skin_tone": "mst-7"
+  },
+  "identity_id": null,
+  "intent": "fictional",
+  "region_context": "south-asia-coverage",
+  "render": {
+    "guidance_scale": 7.0,
+    "height": 384,
+    "model_key": "sd15",
+    "seed": 1002,
+    "steps": 20,
+    "width": 384
+  },
+  "scene": {
+    "background": "office-bokeh",
+    "pose": "three-quarter-headshot"
+  },
+  "spec_id": "a2_studio_portrait"
+}

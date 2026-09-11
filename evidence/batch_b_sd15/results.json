@@ -1,0 +1,67 @@
+{
+  "batch_id": "batch_b_sd15",
+  "results": [
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_sd15/images/b0_base__sd15__s2001.png",
+      "job_id": "b0_base__sd15__s2001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.231,
+      "sha256": "a4bd3ca1713f3e750f1287360fce6134fcd245df86670a0ddd90e014a9b0b2ff",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_sd15/images/b1_var_age_band__sd15__s2001.png",
+      "job_id": "b1_var_age_band__sd15__s2001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.231,
+      "sha256": "af034622856f12758dc251789fe877e0bff525ab3a2e14bbb2076dad30bd7748",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_sd15/images/b2_var_attire__sd15__s2001.png",
+      "job_id": "b2_var_attire__sd15__s2001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.238,
+      "sha256": "294b192340f9e4eb3e2bcd23ec5be11508f6c0b85b441bfe6c1a5133e9e59ca5",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_sd15/images/b3_var_eyewear__sd15__s2001.png",
+      "job_id": "b3_var_eyewear__sd15__s2001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.251,
+      "sha256": "fde2752ecb117ffd7c4e240ca66136b6b10a7baf8850db209954e71d9a1cffd7",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_b_sd15/images/b4_var_background__sd15__s2001.png",
+      "job_id": "b4_var_background__sd15__s2001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.255,
+      "sha256": "de377e0da6999e5d2d24a67010bb5583383bb1f2735f508fe1f03aa773eb8795",
+      "status": "ok"
+    }
+  ],
+  "route": "notebook",
+  "written_at": "2026-09-11T11:57:00.682745+00:00"
+}

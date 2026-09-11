@@ -1,0 +1,26 @@
+{
+  "batch_id": "batch_c_edge",
+  "by_model": {},
+  "coverage": {
+    "age_band": {},
+    "attire": {},
+    "background": {},
+    "hair_length": {},
+    "presentation": {},
+    "region_context": {},
+    "skin_tone": {}
+  },
+  "diversity": {
+    "n_images": 0
+  },
+  "identity_consistency": {},
+  "job_success_rate": 0.0,
+  "metric_models": {
+    "clip_model": "openai/clip-vit-base-patch32",
+    "clip_revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+    "identity_model": "facebook/dinov2-small",
+    "identity_revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056"
+  },
+  "n_scored": 0,
+  "per_image": {}
+}

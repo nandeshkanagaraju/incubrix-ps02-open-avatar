@@ -22,6 +22,17 @@ from typing import Protocol
 
 from .jobs import Job
 
+# The only weight files a text-to-image diffusers pipeline actually loads.
+# Single source of truth, shared with scripts/download_models.py (what to fetch)
+# and bench.py (what counts towards reported model size). The SD 1.5 repo also
+# ships single-file checkpoints, non-EMA UNet weights, fp16 duplicates and a
+# safety checker we disable - ~19 GB of files that are never read.
+PIPELINE_WEIGHT_FILES = (
+    "text_encoder/model.safetensors",
+    "unet/diffusion_pytorch_model.safetensors",
+    "vae/diffusion_pytorch_model.safetensors",
+)
+
 
 @dataclass
 class JobResult:
@@ -34,6 +45,7 @@ class JobResult:
     device: str
     backend: str
     dtype: str | None = None
+    attention_slicing: bool | None = None
     error: str | None = None
 
     def to_dict(self) -> dict:
@@ -79,16 +91,12 @@ class LocalDiffusersBackend:
 
     def __init__(self, device: str = "auto", dtype: str = "auto"):
         self.device = pick_device(device)
-        # float32 everywhere by default. float16 is the obvious memory win on
-        # MPS (UNet 3.4 GB -> 1.7 GB) but SD 1.5's VAE decoder overflows in fp16
-        # and silently emits NaN, which reaches disk as an all-black PNG - see
-        # evidence/failures/fp16_mps_nan_black_output.png. Upcasting only the VAE
-        # then fails because the UNet hands it fp16 latents, so the choice is
-        # all-fp16 (silently wrong) or all-fp32 (correct). Correct wins; the
-        # memory is recovered with attention and VAE slicing below.
-        # `--dtype float16` remains available for anyone who wants to reproduce
-        # the failure. The effective dtype is recorded on every JobResult.
-        self.dtype = "float32" if dtype == "auto" else dtype
+        # float16 on MPS (UNet residency 3.4 GB -> 1.7 GB, which is what makes an
+        # 8 GB machine viable); float32 on CPU, where fp16 matmuls are not
+        # accelerated. See _build() for the attention-slicing interaction that
+        # makes this safe. The effective dtype is recorded on every JobResult.
+        self.dtype = ("float16" if self.device == "mps" else "float32") if dtype == "auto" else dtype
+        self.attention_slicing: bool | None = None
         self._cache: dict[tuple, object] = {}
 
     # -- pipeline construction -------------------------------------------
@@ -120,8 +128,26 @@ class LocalDiffusersBackend:
             pipe.fuse_lora()
         pipe.to(self.device)
         pipe.set_progress_bar_config(disable=True)
-        # 8 GB laptop: slice attention and the VAE so peak RSS stays bounded.
-        pipe.enable_attention_slicing("max")
+
+        # Attention slicing is the standard memory-efficiency step and the brief
+        # explicitly recommends it. On MPS in float16 it is also a correctness
+        # bug: sliced attention makes the UNet emit NaN latents, which the VAE
+        # faithfully decodes into an all-black PNG with no error raised. The
+        # failure is silent - the pipeline reports success.
+        #
+        # Measured on this host (Apple M1, torch 2.8.0, SD 1.5, 384px/6 steps):
+        #   fp16 + slicing    8.1s  latent NaN = True   -> black image
+        #   fp16 no slicing   5.9s  latent NaN = False  -> valid image
+        #
+        # So on MPS we drop attention slicing: it is not a memory/speed trade-off
+        # here, it is strictly worse on both. CPU keeps slicing, where it is both
+        # correct and necessary. VAE slicing is unaffected and stays on
+        # everywhere - it operates after the UNet and does not touch attention.
+        # See evidence/failures/fp16_mps_nan_black_output.png and
+        # tests/test_jobs_and_validate.py::test_tiny_blank_image_reports_both_codes.
+        self.attention_slicing = not (self.device == "mps" and self.dtype == "float16")
+        if self.attention_slicing:
+            pipe.enable_attention_slicing("max")
         if hasattr(pipe, "enable_vae_slicing"):
             pipe.enable_vae_slicing()
         return pipe
@@ -162,14 +188,16 @@ class LocalDiffusersBackend:
                 job_id=job.job_id, status="ok", image_path=str(target),
                 sha256=sha256_file(target), runtime_sec=round(dt, 3),
                 peak_rss_mb=round(_peak_rss_mb(), 1), device=self.device, backend=self.name,
-                dtype=self.dtype,
+                dtype=self.dtype, attention_slicing=getattr(self, "attention_slicing", None),
             )
         except Exception as exc:  # noqa: BLE001 - a failed job must not kill the batch
             return JobResult(
                 job_id=job.job_id, status="error", image_path=None, sha256=None,
                 runtime_sec=round(time.perf_counter() - t0, 3),
                 peak_rss_mb=round(_peak_rss_mb(), 1), device=self.device,
-                backend=self.name, dtype=self.dtype, error=f"{type(exc).__name__}: {exc}",
+                backend=self.name, dtype=self.dtype,
+                attention_slicing=getattr(self, "attention_slicing", None),
+                error=f"{type(exc).__name__}: {exc}",
             )
 
 

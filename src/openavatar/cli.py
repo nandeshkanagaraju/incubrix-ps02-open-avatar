@@ -219,7 +219,11 @@ def bench(
     s = rep["summary"]
     console.print(f"median time per image: {s['median_time_per_image_sec']}s "
                   f"(range {s['fastest_sec']}-{s['slowest_sec']}s over {s['jobs_timed']} job(s))")
-    console.print(f"pipeline load: {rep['pipeline_load_sec']}s | process RSS {rep['process_rss_mb']} MB")
+    console.print(f"pipeline load: {rep['pipeline_load_sec']}s | "
+                  f"peak process RSS {rep['peak_process_rss_mb']} MB "
+                  f"(current {rep['current_process_rss_mb']} MB)")
+    for key, m in sorted(rep["models"].items()):
+        console.print(f"model {key}: {m['size_mb']} MB of loaded weights @ {m['revision'][:12]}")
     console.print(f"benchmark -> {bundle/'benchmark.json'}")
 
 

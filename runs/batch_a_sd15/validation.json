@@ -1,0 +1,88 @@
+{
+  "batch_id": "batch_a_sd15",
+  "failed": 0,
+  "items": [
+    {
+      "codes": [],
+      "details": {
+        "bytes": 228432,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a1_studio_portrait__sd15__s1001.png",
+        "pixel_stddev": 59.902,
+        "sha256": "60c18d716182860f75b83a367798648366cc0801cc882fd7c640ad6345925170",
+        "width": 384
+      },
+      "job_id": "a1_studio_portrait__sd15__s1001",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 186035,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a2_studio_portrait__sd15__s1002.png",
+        "pixel_stddev": 76.398,
+        "sha256": "3d59abc50b2ea0e41e2d306ffcaae6a500b2a08514883abc86f5488cf5e1f750",
+        "width": 384
+      },
+      "job_id": "a2_studio_portrait__sd15__s1002",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 206291,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a3_studio_portrait__sd15__s1003.png",
+        "pixel_stddev": 63.741,
+        "sha256": "d161bbef42d01de55cac0cd376b44a8282a562bc0419f50dc591b3f660428803",
+        "width": 384
+      },
+      "job_id": "a3_studio_portrait__sd15__s1003",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 252276,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a4_studio_portrait__sd15__s1004.png",
+        "pixel_stddev": 66.956,
+        "sha256": "460bcc791323f150a3e2f0cbfcd154450064c76f818bd1f2c64cc8fe2e9b4db9",
+        "width": 384
+      },
+      "job_id": "a4_studio_portrait__sd15__s1004",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 279127,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a5_studio_portrait__sd15__s1005.png",
+        "pixel_stddev": 65.332,
+        "sha256": "d4f63a86ae764eba69939c69c265a4a62c1d595bc15cb6fdb2cc1f14e3afe21d",
+        "width": 384
+      },
+      "job_id": "a5_studio_portrait__sd15__s1005",
+      "ok": true
+    },
+    {
+      "codes": [],
+      "details": {
+        "bytes": 227838,
+        "height": 384,
+        "path": "runs/batch_a_sd15/images/a6_studio_portrait__sd15__s1006.png",
+        "pixel_stddev": 72.306,
+        "sha256": "55a5d26509d2edddff4bbd7e20335b6206ef87701e18c2efc6c4ccde2f021365",
+        "width": 384
+      },
+      "job_id": "a6_studio_portrait__sd15__s1006",
+      "ok": true
+    }
+  ],
+  "passed": 6,
+  "success_rate": 1.0,
+  "total_jobs": 6,
+  "validated_at": "2026-09-11T11:57:01.121953+00:00"
+}

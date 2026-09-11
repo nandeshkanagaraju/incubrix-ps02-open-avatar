@@ -1,0 +1,67 @@
+{
+  "any_bytes_identical": false,
+  "max_abs_clip_delta": 0.158,
+  "mean_abs_clip_delta": 0.083,
+  "mean_dinov2_cosine": 0.9995,
+  "min_dinov2_cosine": 0.9978,
+  "n_compared": 6,
+  "note": "Bit-identical output across CUDA and MPS is not achievable - the two backends reduce floating point in different orders. The reproducibility claim is therefore metric and perceptual equivalence at a fixed seed, not byte equality.",
+  "per_job": [
+    {
+      "bytes_identical": false,
+      "clip_a": 21.585,
+      "clip_b": 21.661,
+      "clip_delta": 0.076,
+      "dinov2_cosine": 0.9997,
+      "job_id": "a1_studio_portrait__sd15__s1001"
+    },
+    {
+      "bytes_identical": false,
+      "clip_a": 29.69,
+      "clip_b": 29.63,
+      "clip_delta": 0.06,
+      "dinov2_cosine": 0.9978,
+      "job_id": "a2_studio_portrait__sd15__s1002"
+    },
+    {
+      "bytes_identical": false,
+      "clip_a": 31.849,
+      "clip_b": 31.826,
+      "clip_delta": 0.023,
+      "dinov2_cosine": 0.9999,
+      "job_id": "a3_studio_portrait__sd15__s1003"
+    },
+    {
+      "bytes_identical": false,
+      "clip_a": 30.634,
+      "clip_b": 30.696,
+      "clip_delta": 0.062,
+      "dinov2_cosine": 0.9999,
+      "job_id": "a4_studio_portrait__sd15__s1004"
+    },
+    {
+      "bytes_identical": false,
+      "clip_a": 29.941,
+      "clip_b": 29.783,
+      "clip_delta": 0.158,
+      "dinov2_cosine": 0.9998,
+      "job_id": "a5_studio_portrait__sd15__s1005"
+    },
+    {
+      "bytes_identical": false,
+      "clip_a": 29.306,
+      "clip_b": 29.425,
+      "clip_delta": 0.119,
+      "dinov2_cosine": 0.9999,
+      "job_id": "a6_studio_portrait__sd15__s1006"
+    }
+  ],
+  "route_a": {
+    "bundle": "runs/batch_a_local",
+    "route": "local"
+  },
+  "route_b": {
+    "bundle": "runs/batch_a_sd15",
+    "route": "notebook"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "batch_id": "batch_a_sd15",
+  "results": [
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a1_studio_portrait__sd15__s1001.png",
+      "job_id": "a1_studio_portrait__sd15__s1001",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 4.273,
+      "sha256": "60c18d716182860f75b83a367798648366cc0801cc882fd7c640ad6345925170",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a2_studio_portrait__sd15__s1002.png",
+      "job_id": "a2_studio_portrait__sd15__s1002",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.188,
+      "sha256": "3d59abc50b2ea0e41e2d306ffcaae6a500b2a08514883abc86f5488cf5e1f750",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a3_studio_portrait__sd15__s1003.png",
+      "job_id": "a3_studio_portrait__sd15__s1003",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.187,
+      "sha256": "d161bbef42d01de55cac0cd376b44a8282a562bc0419f50dc591b3f660428803",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a4_studio_portrait__sd15__s1004.png",
+      "job_id": "a4_studio_portrait__sd15__s1004",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.206,
+      "sha256": "460bcc791323f150a3e2f0cbfcd154450064c76f818bd1f2c64cc8fe2e9b4db9",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a5_studio_portrait__sd15__s1005.png",
+      "job_id": "a5_studio_portrait__sd15__s1005",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.206,
+      "sha256": "d4f63a86ae764eba69939c69c265a4a62c1d595bc15cb6fdb2cc1f14e3afe21d",
+      "status": "ok"
+    },
+    {
+      "backend": "notebook",
+      "device": "cuda",
+      "dtype": "float16",
+      "image_path": "runs/batch_a_sd15/images/a6_studio_portrait__sd15__s1006.png",
+      "job_id": "a6_studio_portrait__sd15__s1006",
+      "peak_accelerator_mb": 2520.0,
+      "peak_rss_mb": null,
+      "runtime_sec": 2.227,
+      "sha256": "55a5d26509d2edddff4bbd7e20335b6206ef87701e18c2efc6c4ccde2f021365",
+      "status": "ok"
+    }
+  ],
+  "route": "notebook",
+  "written_at": "2026-09-11T11:57:00.179124+00:00"
+}
